@@ -13,11 +13,11 @@ ENV DOCKER_HOST tcp://172.17.0.1:2375
 
 ADD docker.repo /etc/yum.repos.d
 RUN yum clean all && \
-    yum -y install ansible docker-engine
+    yum -y install epel-release ansible docker-engine
 
 # pip installation
 #wget -q --no-check-certificate https://bootstrap.pypa.io/get-pip.py && \
-curl -L -O  https://bootstrap.pypa.io/get-pip.py && \
+RUN curl -L -O  https://bootstrap.pypa.io/get-pip.py && \
     python get-pip.py
 
 
