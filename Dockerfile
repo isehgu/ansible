@@ -14,7 +14,7 @@ ENV DOCKER_HOST tcp://td-tac01.test.ise.com:2375
 ADD docker.repo /etc/yum.repos.d
 RUN yum clean all && \
     yum -y install epel-release && \
-    yum -y install ansible docker-engine git
+    yum -y install ansible docker-engine-0:1.10.3-1.e17.centos.x86_64 git
 
 # pip installation
 #wget -q --no-check-certificate https://bootstrap.pypa.io/get-pip.py && \
