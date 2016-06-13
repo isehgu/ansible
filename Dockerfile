@@ -17,8 +17,8 @@ RUN mkdir /root/.ssh && \
 
 ADD config /root/.ssh/
 
-RUN mv /opt/ansible/ansible /root/.ssh; \
-    mv /opt/ansible/ansible.pub /root/.ssh
+# RUN mv /opt/ansible/ansible /root/.ssh; \
+#     mv /opt/ansible/ansible.pub /root/.ssh
 
 RUN yum clean all && \
     yum -y install epel-release && \
