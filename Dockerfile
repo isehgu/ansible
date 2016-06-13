@@ -17,9 +17,9 @@ RUN mkdir /root/.ssh && \
 
 ADD config /root/.ssh/
 
-RUN mv /opt/ansible/ansible /root/.ssh; |
+RUN mv /opt/ansible/ansible /root/.ssh; \
     mv /opt/ansible/ansible.pub /root/.ssh
-    
+
 RUN yum clean all && \
     yum -y install epel-release && \
     #yum -y install ansible docker-engine-0:1.10.3-1.el7.centos.x86_64 git
