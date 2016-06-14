@@ -4,3 +4,4 @@ Host *.test.ise.com
   User guhan
   IdentityFile ~/.ssh/ansible
   StrictHostKeyChecking no
+  UserKnownHostsFile=/dev/null

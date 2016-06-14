@@ -22,8 +22,8 @@ ADD config /root/.ssh/
 
 RUN yum clean all && \
     yum -y install epel-release && \
-    #yum -y install ansible docker-engine-0:1.10.3-1.el7.centos.x86_64 git
-    yum -y install ansible 
+    yum -y install ansible docker-engine-0:1.10.3-1.el7.centos.x86_64 git
+    #yum -y install ansible 
 
 # pip installation
 #wget -q --no-check-certificate https://bootstrap.pypa.io/get-pip.py && \

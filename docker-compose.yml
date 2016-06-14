@@ -5,4 +5,4 @@ services:
       context: .
     image: ansible_han:latest
     volumes:
-      - ~/ansible_stuff:/opt/ansible
+      - ./ansible_app:/opt/ansible
