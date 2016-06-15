@@ -5,3 +5,7 @@ Host *.test.ise.com
   IdentityFile ~/.ssh/ansible
   StrictHostKeyChecking no
   UserKnownHostsFile=/dev/null
+
+Host td-tac01*
+  User core
+  Port 2222

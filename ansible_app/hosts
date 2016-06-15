@@ -1,7 +1,7 @@
 [oat_linux]
 tc-oat01.test.ise.com
 tc-oat02.test.ise.com
-tc-oat03.test.ise.com
+tc-oat08.test.ise.com
 
 [oat:children]
 oat_linux
@@ -9,6 +9,8 @@ oat_linux
 [bdt]
 td-bdt01.test.ise.com
 
-[map_docker]
-map ansible_host=td-tac01.test.ise.com
+# coreOS nodes don't have python install. Thus ansible can't work.
+# need to look into using docker module in ansible.
+#[map_docker]
+# map ansible_host=td-tac01.test.ise.com
 
