@@ -1,11 +1,12 @@
 #SSH Config file
 
-Host *.test.ise.com
-  User guhan
-  IdentityFile ~/.ssh/ansible
-  StrictHostKeyChecking no
-  UserKnownHostsFile=/dev/null
-
 Host td-tac01*
   User core
   Port 2222
+
+Host *.test.ise.com
+  User guhan
+  IdentityFile /opt/ansible/ansible_cred/ansible
+  StrictHostKeyChecking no
+  UserKnownHostsFile=/dev/null
+
