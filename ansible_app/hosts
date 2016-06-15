@@ -1,11 +1,14 @@
 [oat_linux]
-td-oat01.test.ise.com
-td-oat02.test.ise.com
-td-oat03.test.ise.com
+tc-oat01.test.ise.com
+tc-oat02.test.ise.com
+tc-oat03.test.ise.com
 
 [oat:children]
 oat_linux
 
 [bdt]
 td-bdt01.test.ise.com
+
+[map_docker]
+map ansible_host=td-tac01.test.ise.com
 
