@@ -1,0 +1,16 @@
+---
+- hosts: docker_host
+  gather_facts: false
+  tasks:
+    - name: verify map service
+      command: docker exec han_mapapptestenv_1 supervisorctl status map
+      register: map_status
+      #failed_when: "'RUNNING' not in command_result.stderr"
+
+    -debug: var=map_status
+
+    # - name: verify nodejs service
+
+    # - name: verify mysql service
+
+    # - name: verify map page loads

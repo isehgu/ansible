@@ -10,6 +10,8 @@ ENV http_proxy http://proxy2.inf.ise.com:3128
 ENV https_proxy http://proxy2.inf.ise.com:3128
 ENV proxy http://proxy2.inf.ise.com:3128
 ENV DOCKER_HOST tcp://td-tac01.test.ise.com:2375
+# Color coding terminal
+ENV TERM=xterm
 
 ADD docker.repo /etc/yum.repos.d
 RUN mkdir /root/.ssh && \
