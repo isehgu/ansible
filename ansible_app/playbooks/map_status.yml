@@ -9,7 +9,7 @@
       failed_when: "'RUNNING' not in map_status.stdout"
       changed_when: false
 
-    - debug: var=map_status
+    - debug: msg="{{map_status.stdout}}"
 
     # - name: verify nodejs service
 
