@@ -5,9 +5,10 @@
     - name: verify map service
       command: docker exec han_mapapptestenv_1 supervisorctl status map
       register: map_status
-      #failed_when: "'RUNNING' not in command_result.stderr"
+      failed_when: "'RUNNING' not in map_status.stdout"
+      changed_when: false
 
-    -debug: var=map_status
+    - debug: var=map_status
 
     # - name: verify nodejs service
 
