@@ -8,11 +8,21 @@
       register: map_status
       failed_when: "'RUNNING' not in map_status.stdout"
       changed_when: false
-
     - debug: msg="{{map_status.stdout}}"
 
-    # - name: verify nodejs service
+    - name: verify nodejs service
+      command: docker exec tacstack_mapappprod_1 supervisorctl status nodejs
+      register: node_status
+      failed_when: "'RUNNING' not in node_status.stdout"
+      changed_when: false
+    - debug: msg="{{node_status.stdout}}"
 
-    # - name: verify mysql service
+    - name: verify mysql service
+      command: docker exec tacstack_mapappprod_1 supervisorctl status mysql
+      register: mysql_status
+      failed_when: "'RUNNING' not in mysql_status.stdout"
+      changed_when: false
+    - debug: msg="{{mysql_status.stdout}}"
 
     # - name: verify map page loads
+      
