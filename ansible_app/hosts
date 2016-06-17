@@ -13,4 +13,6 @@ td-bdt01.test.ise.com
 # need to look into using docker module in ansible.
 #[map_docker]
 # map ansible_host=td-tac01.test.ise.com
+[docker]
+docker_host ansible_connection=local
 
