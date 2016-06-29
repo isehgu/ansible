@@ -6,8 +6,11 @@
       #command: docker exec han_mapapptestenv_1 supervisorctl status map
       command: docker exec tacstack_mapappprod_1 supervisorctl status map
       register: map_status
-      failed_when: "'RUNNING' not in map_status.stdout"
       changed_when: false
+      #until: "'RUNNING' not in map_status.stdout"
+      until: "map_status.stdout.count('RUNNING') > 0"
+      retries: 10
+      delay: 2
     - debug: msg="{{map_status.stdout}}"
 
     - name: verify nodejs service
