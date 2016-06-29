@@ -11,21 +11,25 @@
       until: "map_status.stdout.count('RUNNING') > 0"
       retries: 10
       delay: 2
-    - debug: msg="{{map_status.stdout}}"
+    #- debug: msg="{{map_status.stdout}}"
 
     - name: verify nodejs service
       command: docker exec tacstack_mapappprod_1 supervisorctl status nodejs
       register: node_status
-      failed_when: "'RUNNING' not in node_status.stdout"
+      until: "node_status.stdout.count('RUNNING') > 0"
+      retries: 10
+      delay: 2
       changed_when: false
-    - debug: msg="{{node_status.stdout}}"
+    #- debug: msg="{{node_status.stdout}}"
 
     - name: verify mysql service
       command: docker exec tacstack_mapappprod_1 supervisorctl status mysql
       register: mysql_status
-      failed_when: "'RUNNING' not in mysql_status.stdout"
+      until: "mysql_status.stdout.count('RUNNING') > 0"
+      retries: 10
+      delay: 2
       changed_when: false
-    - debug: msg="{{mysql_status.stdout}}"
+    #- debug: msg="{{mysql_status.stdout}}"
 
     # - name: verify map page loads
       
