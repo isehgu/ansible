@@ -34,6 +34,7 @@
     - name: verify map page loads
       uri: return_content=yes url=http://td-tac01.test.ise.com
       register: map_content
+      failed_when: "'<title>MAP</title>' not in map_content.content"
 
     - debug: var=map_content
       
