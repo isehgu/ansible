@@ -31,5 +31,9 @@
       changed_when: false
     #- debug: msg="{{mysql_status.stdout}}"
 
-    # - name: verify map page loads
+    - name: verify map page loads
+      uri: return_content=yes url=http://td-tac01.test.ise.com
+      register: map_content
+
+    - debug: var=map_content
       
