@@ -15,4 +15,4 @@ td-tac01.test.ise.com
 # coreOS nodes don't have python install. Thus ansible can't work.
 # need to look into using docker module in ansible.
 [map_docker]
-map ansible_host=td-tac01.test.ise.com
+td-tac01.test.ise.com
