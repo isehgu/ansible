@@ -11,16 +11,16 @@
       changed_when: false
       #until: "'RUNNING' not in map_status.stdout"
       until: "map_status.stdout.count('RUNNING') > 0"
-      retries: 10
-      delay: 2
+      retries: 5
+      delay: 1
     #- debug: msg="{{map_status.stdout}}"
 
     - name: verify nodejs service
       command: docker exec tacstack_mapappprod_1 supervisorctl status nodejs
       register: node_status
       until: "node_status.stdout.count('RUNNING') > 0"
-      retries: 10
-      delay: 2
+      retries: 5
+      delay: 1
       changed_when: false
     #- debug: msg="{{node_status.stdout}}"
 
@@ -28,8 +28,8 @@
       command: docker exec tacstack_mapappprod_1 supervisorctl status mysql
       register: mysql_status
       until: "mysql_status.stdout.count('RUNNING') > 0"
-      retries: 10
-      delay: 2
+      retries: 5
+      delay: 1
       changed_when: false
     #- debug: msg="{{mysql_status.stdout}}"
 
