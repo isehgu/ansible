@@ -9,8 +9,8 @@
       #command: cd /home/core/tacstack && ~/bin/docker-compose -f docker-compose-prod.yml restart
       changed_when: false
       register: restart_result
-      failed_when: "restart_result.stderr.count('Restarting han') >= 2"
-      #failed_when: "restart_result.stderr.count('Restarting tacstack') >= 2"
+      failed_when: "restart_result.stderr.count('Restarting han') <= 2"
+      #failed_when: "restart_result.stderr.count('Restarting tacstack') < 2"
 
 
     - debug: var=restart_result
