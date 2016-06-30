@@ -8,12 +8,12 @@
       command: chdir=/home/core/tacstack ~/bin/docker-compose -f docker-compose-testenv.yml -p han restart 
       #command: cd /home/core/tacstack && ~/bin/docker-compose -f docker-compose-prod.yml restart
       changed_when: false
-      registere: restart_result
+      register: restart_result
       until: "restart_result.stderr.count('Restarting han') >= 2"
       #until: "restart_result.stderr.count('Restarting tacstack') >= 2"
       retries: 20
       delay: 5
-      
+
     - debug: var=restart_result
     # - name: Cleanup MAP by running MAPJanitor
     #   command: docker exec tacstack_mapappprod_1 python /home/bdt/map/src/map_backend_server/MAPJanitor.py
