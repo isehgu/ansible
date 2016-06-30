@@ -1,11 +1,7 @@
 ---
 - hosts: coreos
   gather_facts: false
-  tasks:
-    - name: Setting proxy env var
-      raw: source /home/core/ansible/env_var && env | grep -i proxy
-      register: proxy_result
-      failed_when: "proxy_result.stdout.count('proxy') < 10"
+  environment: "{{proxy_setting}}"
 
   roles:
     - defunctzombie.coreos-bootstrap

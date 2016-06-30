@@ -1,0 +1,7 @@
+---
+proxy_setting:
+  HTTP_PROXY: http://proxy2.inf.ise.com:3128
+  HTTPS_PROXY: http://proxy2.inf.ise.com:3128
+  http_proxy: http://proxy2.inf.ise.com:3128
+  https_proxy: http://proxy2.inf.ise.com:3128
+  proxy: http://proxy2.inf.ise.com:3128
