@@ -9,10 +9,10 @@ oat_linux
 [bdt]
 td-bdt01.test.ise.com
 
+[coreos]
+td-tc01.test.ise.com
+
 # coreOS nodes don't have python install. Thus ansible can't work.
 # need to look into using docker module in ansible.
-#[map_docker]
-# map ansible_host=td-tac01.test.ise.com
-[docker]
-docker_host ansible_connection=local
-
+[map_docker]
+map ansible_host=td-tac01.test.ise.com
