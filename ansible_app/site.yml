@@ -1,2 +1,2 @@
 ---
-- include: proxy.yml
+- include: playbooks/proxy.yml
