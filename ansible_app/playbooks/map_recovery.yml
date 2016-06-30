@@ -1,5 +1,5 @@
 ---
-- host: docker_host
+- host: map_docker
   gather_facts: false
   tasks:
     - name: Restart map container

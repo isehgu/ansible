@@ -1,5 +1,5 @@
 ---
-- hosts: docker_host
+- hosts: map_docker
   gather_facts: false
   tasks:
     - name: verify map service
