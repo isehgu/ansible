@@ -1,7 +1,2 @@
 ---
-- hosts: coreos
-  gather_facts: false
-  environment: "{{proxy_setting}}"
-
-  roles:
-    - defunctzombie.coreos-bootstrap
+- include: proxy.yml

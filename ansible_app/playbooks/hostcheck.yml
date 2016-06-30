@@ -1,6 +1,8 @@
 ---
-  - hosts: all
-    gather_facts: false
-    tasks:
-      - name: Check hosts status by getting hostname
-        command: hostname
+- include: proxy.yml
+    
+- hosts: all
+  gather_facts: false
+  tasks:
+    - name: Check hosts status by getting hostname
+      command: hostname

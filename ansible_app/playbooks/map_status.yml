@@ -1,4 +1,6 @@
 ---
+- include: proxy.yml
+
 - hosts: map_docker
   gather_facts: false
   tasks:
