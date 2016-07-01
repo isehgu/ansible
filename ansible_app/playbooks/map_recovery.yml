@@ -4,23 +4,29 @@
 - hosts: map_docker
   gather_facts: false
   tasks:
+    - name: Check MAP container status
+      command:
+      register: map_container_result
+      ignore_error: True
+
     - name: Restart map container
       command: chdir=/home/core/tacstack ~/bin/docker-compose -f docker-compose-testenv.yml -p han restart 
       #command: cd /home/core/tacstack && ~/bin/docker-compose -f docker-compose-prod.yml restart
-      changed_when: false
+      changed_when: False
+      # TBC
+      when: map_container_result.stderr
+      
       register: restart_result
       failed_when: "restart_result.stderr.count('Restarting han') <= 2"
       #failed_when: "restart_result.stderr.count('Restarting tacstack') < 2"
 
 
-    - debug: var=restart_result
+    #- debug: var=restart_result
+
     # - name: Cleanup MAP by running MAPJanitor
     #   command: docker exec tacstack_mapappprod_1 python /home/bdt/map/src/map_backend_server/MAPJanitor.py
     #   register: janitor_result
     #   changed_when: false
-    #   until: "janitor_result.stdout.count('Cleanup Done!') > 0"
-    #   # 100 sec of wait time before deeming this a failure
-    #   retries: 20
-    #   delay: 5
+    #   failed_when: "'Cleanup Done!' not in janitor_result.stdout"
 
     # - name: Start MAP related services
