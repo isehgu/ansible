@@ -5,23 +5,33 @@
   gather_facts: false
   tasks:
     - name: Check MAP container status
-      command:
+      shell: docker ps | grep han_
       register: map_container_result
-      ignore_error: True
-
-    - name: Restart map container
-      command: chdir=/home/core/tacstack ~/bin/docker-compose -f docker-compose-testenv.yml -p han restart 
-      #command: cd /home/core/tacstack && ~/bin/docker-compose -f docker-compose-prod.yml restart
+      ignore_errors: True
       changed_when: False
-      # TBC
-      when: map_container_result.stderr
+
+    #- debug: var=map_container_result
+
+    - name: Start map container if needed
+      # This is using start instead of restart because one can't restart a downed container. docker would fail.
+      command: chdir=/home/core/tacstack ~/bin/docker-compose -f docker-compose-testenv.yml -p han start 
+      #command: cd /home/core/tacstack && ~/bin/docker-compose -f docker-compose-prod.yml start
+
+      changed_when: False
+      when: "map_container_result.stdout.count('han_') < 3"
+      #when: "map_container_result.stdout.count('tacstack_') < 2"
       
-      register: restart_result
-      failed_when: "restart_result.stderr.count('Restarting han') <= 2"
-      #failed_when: "restart_result.stderr.count('Restarting tacstack') < 2"
+    - name: Re-check MAP container status
+      shell: docker ps | grep han_
+      register: map_container_result
+      changed_when: False
+     
+    - fail: msg="Not all containers were started successfully"
+      when: "map_container_result.stdout.count('han_') < 3"
+      #when: "map_container_result.stdout.count('tacstack_') < 2"
 
 
-    #- debug: var=restart_result
+    #- debug: var=map_container_result
 
     # - name: Cleanup MAP by running MAPJanitor
     #   command: docker exec tacstack_mapappprod_1 python /home/bdt/map/src/map_backend_server/MAPJanitor.py
