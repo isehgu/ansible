@@ -33,6 +33,14 @@
       changed_when: false
     #- debug: msg="{{mysql_status.stdout}}"
 
+    - name: verify httpd service has started
+      command: docker exec tacstack_mapappprod_1 supervisorctl status httpd
+      register: httpd_status
+      until: "httpd_status.stdout.count('RUNNING') > 0"
+      retries: 5
+      delay: 1
+      changed_when: false
+
     - name: verify map page loads
       uri: return_content=yes url=http://td-tac01.test.ise.com
       register: map_content
