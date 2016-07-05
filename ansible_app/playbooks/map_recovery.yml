@@ -68,10 +68,15 @@
       tags: ['prod']
 
     - wait_for: host=td-tac01.test.ise.com port=80
+      tags: ['prod']
     - wait_for: host=td-tac01.test.ise.com port=9001
+      tags: ['prod']
     - wait_for: host=td-tac01.test.ise.com port=18930
+      tags: ['prod']
     - wait_for: host=td-tac01.test.ise.com port=18922
+      tags: ['prod']
     - wait_for: host=td-tac01.test.ise.com port=18906
+      tags: ['prod']
 
     - name: Cleanup MAP by running MAPJanitor
       command: docker exec tacstack_mapappprod_1 python /home/bdt/map/src/map_backend_server/MAPJanitor.py
