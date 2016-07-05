@@ -86,7 +86,7 @@
       command: docker exec tacstack_mapappprod_1 supervisorctl status httpd
       register: httpd_status
       until: "httpd_status.stdout.count('RUNNING') > 0"
-      retries: 5
+      retries: 10
       delay: 1
       changed_when: false
       # tags: ['prod']

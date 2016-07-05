@@ -8,9 +8,8 @@
 
     - wait_for: port=80 state=drained
 
-    - pause: 
-        seconds=30
-        prompt="Wait for 30 seconds before restarting map to avoid httpd startup issue"
+    - name: Pausing to avoid httpd startup issue when restart happens too quickly
+      pause: seconds=15
 
-- include: playbooks/map_recovery.yml
+- include: map_recovery.yml
   tags: ['prod']
