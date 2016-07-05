@@ -67,3 +67,13 @@
       when: "map_container_result.stdout.count('tacstack_') < 2"
       tags: ['prod']
 
+    - name: Cleanup MAP by running MAPJanitor
+      command: docker exec tacstack_mapappprod_1 python /home/bdt/map/src/map_backend_server/MAPJanitor.py
+      register: janitor_result
+      changed_when: false
+      failed_when: "'Cleanup Done!' not in janitor_result.stdout"
+      tags: ["prod"]
+
+    - debug: var=janitor_result
+
+    # - name: Start MAP related services
