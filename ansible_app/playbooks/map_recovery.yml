@@ -9,26 +9,26 @@
       register: map_container_result
       ignore_errors: True
       changed_when: False
+      tags: ['test']
 
     #- debug: var=map_container_result
 
     - name: Start map container if needed
       # This is using start instead of restart because one can't restart a downed container. docker would fail.
       command: chdir=/home/core/tacstack ~/bin/docker-compose -f docker-compose-testenv.yml -p han start 
-      #command: cd /home/core/tacstack && ~/bin/docker-compose -f docker-compose-prod.yml start
-
       changed_when: False
       when: "map_container_result.stdout.count('han_') < 3"
-      #when: "map_container_result.stdout.count('tacstack_') < 2"
+      tags: ['test']
       
     - name: Re-check MAP container status
       shell: docker ps | grep han_
       register: map_container_result
       changed_when: False
+      tags: ['test']
      
     - fail: msg="Not all containers were started successfully"
       when: "map_container_result.stdout.count('han_') < 3"
-      #when: "map_container_result.stdout.count('tacstack_') < 2"
+      tags: ['test']
 
 
     #- debug: var=map_container_result
@@ -40,3 +40,30 @@
     #   failed_when: "'Cleanup Done!' not in janitor_result.stdout"
 
     # - name: Start MAP related services
+#############################################################################################################
+    - name: Check MAP container status
+      shell: docker ps | grep tacstack_
+      register: map_container_result
+      ignore_errors: True
+      changed_when: False
+      tags: ['prod']
+
+    #- debug: var=map_container_result
+
+    - name: Start map container if needed
+      # This is using start instead of restart because one can't restart a downed container. docker would fail.
+      command: chdir=/home/core/tacstack ~/bin/docker-compose -f docker-compose-prod.yml start
+      changed_when: False
+      when: "map_container_result.stdout.count('tacstack_') < 2"
+      tags: ['prod']
+      
+    - name: Re-check MAP container status
+      shell: docker ps | grep tacstack_
+      register: map_container_result
+      changed_when: False
+      tags: ['prod']
+     
+    - fail: msg="Not all containers were started successfully"
+      when: "map_container_result.stdout.count('tacstack_') < 2"
+      tags: ['prod']
+
