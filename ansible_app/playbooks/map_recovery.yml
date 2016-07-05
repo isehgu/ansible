@@ -85,10 +85,12 @@
       failed_when: "'Cleanup Done!' not in janitor_result.stdout"
       tags: ["prod"]
 
-    - debug: var=janitor_result
-
     - name: Start MAP related services
       command: docker exec tacstack_mapappprod_1 supervisorctl start map nodejs
       register: map_app_result
+      changed_when: False
+      tags: ["prod"]
 
-    - debug: var=map_app_result
+    - fail: msg="One of more MAP app didn't start successfully"
+      when: "map_app_result.stdout.count('started') < 2"
+      tags: ["prod"]
