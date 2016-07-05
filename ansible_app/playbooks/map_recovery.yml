@@ -87,4 +87,8 @@
 
     - debug: var=janitor_result
 
-    # - name: Start MAP related services
+    - name: Start MAP related services
+      command: docker exec tacstack_mapappprod_1 supervisorctl start map nodejs
+      register: map_app_result
+
+    - debug: var=map_app_result
