@@ -78,6 +78,15 @@
     - wait_for: host=0.0.0.0 port=18906 timeout=30
       tags: ['prod']
 
+    - name: Verify httpd service has started
+      command: docker exec tacstack_mapappprod_1 supervisorctl status httpd
+      register: httpd_status
+      until: "httpd_status.stdout.count('RUNNING') > 0"
+      retries: 5
+      delay: 1
+      changed_when: false
+      tags: ['prod']
+
     - name: Cleanup MAP by running MAPJanitor
       command: docker exec tacstack_mapappprod_1 python /home/bdt/map/src/map_backend_server/MAPJanitor.py
       register: janitor_result
@@ -94,3 +103,9 @@
     - fail: msg="One of more MAP app didn't start successfully"
       when: "map_app_result.stdout.count('started') < 2"
       tags: ["prod"]
+
+    - name: verify map page loads
+      uri: return_content=yes url=http://td-tac01.test.ise.com
+      register: map_content
+      failed_when: "'<title>MAP</title>' not in map_content.content"
+      tags: ['prod']
