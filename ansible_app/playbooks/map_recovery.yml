@@ -67,6 +67,12 @@
       when: "map_container_result.stdout.count('tacstack_') < 2"
       tags: ['prod']
 
+    - wait_for: host=td-tac01.test.ise.com port=80
+    - wait_for: host=td-tac01.test.ise.com port=9001
+    - wait_for: host=td-tac01.test.ise.com port=18930
+    - wait_for: host=td-tac01.test.ise.com port=18922
+    - wait_for: host=td-tac01.test.ise.com port=18906
+
     - name: Cleanup MAP by running MAPJanitor
       command: docker exec tacstack_mapappprod_1 python /home/bdt/map/src/map_backend_server/MAPJanitor.py
       register: janitor_result
