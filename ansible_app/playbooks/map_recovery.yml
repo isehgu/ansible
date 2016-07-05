@@ -67,15 +67,15 @@
       when: "map_container_result.stdout.count('tacstack_') < 2"
       tags: ['prod']
 
-    - wait_for: host=td-tac01.test.ise.com port=80
+    - wait_for: host=0.0.0.0 port=80 timeout=30
       tags: ['prod']
-    - wait_for: host=td-tac01.test.ise.com port=9001
+    - wait_for: host=0.0.0.0 port=9001 timeout=30
       tags: ['prod']
-    - wait_for: host=td-tac01.test.ise.com port=18930
+    - wait_for: host=0.0.0.0 port=18930 timeout=30
       tags: ['prod']
-    - wait_for: host=td-tac01.test.ise.com port=18922
+    - wait_for: host=0.0.0.0 port=18922 timeout=30
       tags: ['prod']
-    - wait_for: host=td-tac01.test.ise.com port=18906
+    - wait_for: host=0.0.0.0port=18906 timeout=30
       tags: ['prod']
 
     - name: Cleanup MAP by running MAPJanitor
