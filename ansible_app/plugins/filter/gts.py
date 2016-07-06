@@ -12,6 +12,9 @@ def gtsOpconCutFluff(output_list):
             separator = 1
             continue
 
+        if 'Last login' in line:
+            continue
+
         if separator:
             result_list.append(line)
 
@@ -25,6 +28,9 @@ def gtsOpconResultCount(output_list):
     for line in output_list:
         if '========' in line:
             separator = 1
+            continue
+
+        if 'Last login' in line:
             continue
 
         if separator:
