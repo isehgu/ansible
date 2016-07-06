@@ -8,7 +8,8 @@
       ignore_errors: True
       changed_when: False
 
-    - debug: msg="Line count is {{gtsstatus_result.stdout_lines|length}}"
+    - debug: msg="Line count is {{gtsstatus_result.stdout_lines|gtsOpconResultCount}}"
+    - debug: msg="{{gtsstatus_result.stdout_lines|gtsOpconCutFluff}}"
 
     - fail: msg="One or more processes are not in their expected state"
       when: gtsstatus_result.stdout_lines|length > 20  #and 
