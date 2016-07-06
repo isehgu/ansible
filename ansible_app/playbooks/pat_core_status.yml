@@ -12,5 +12,9 @@
     #- debug: msg="{{gtsstatus_result.stdout_lines|gtsOpconCutFluff}}"
 
     - fail: msg="One or more processes are not in their expected state"
-      when: "'PerformanceLogger' not in item and 'NewsService' not in item and gtsstatus_result.stdout_lines|gtsOpconResultCount > 0"
+      #when: "'PerformanceLogger' not in item and 'NewsService' not in item and gtsstatus_result.stdout_lines|gtsOpconResultCount > 0"
+      when: ('PerformanceLogger' not in item) and 
+            ('NewsService' not in item) and 
+            (gtsstatus_result.stdout_lines|gtsOpconResultCount > 0)
+
       with_items: "{{gtsstatus_result.stdout_lines|gtsOpconCutFluff}}"
