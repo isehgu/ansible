@@ -3,13 +3,15 @@
   gather_facts: False
   tasks:
     - name: gtsstatus
-      shell: "{{gtsstatus}} {{oat_env|quote}}"
+      shell: "{{gtsstatus_m}} {{oat_env|quote}}"
       register: gtsstatus_result
       ignore_errors: True
       changed_when: False
 
-    #- fail: "One or more processes are not in their expected state"
-     # when: len(gtsstatus_result.stdout_lines) > 0  and 
-      #      "'NewsService' not in {{item}}" and 
-       #     "'PerformanceLogger' not in {{item}}"
-      #with_item: "{{gtsstatus_result.stdout_lines}}"
+    - debug: msg="Line count is {{gtsstatus_result.stdout_lines|length}}"
+
+    - fail: msg="One or more processes are not in their expected state"
+      when: gtsstatus_result.stdout_lines|length > 20  #and 
+            #"'NewsService' not in {{item}}" and 
+            #"'PerformanceLogger' not in {{item}}"
+      #with_items: "{{gtsstatus_result.stdout_lines}}"
