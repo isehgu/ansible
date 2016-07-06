@@ -8,11 +8,9 @@
       ignore_errors: True
       changed_when: False
 
-    - debug: msg="Line count is {{gtsstatus_result.stdout_lines|gtsOpconResultCount}}"
-    - debug: msg="{{gtsstatus_result.stdout_lines|gtsOpconCutFluff}}"
+    #- debug: msg="Line count is {{gtsstatus_result.stdout_lines|gtsOpconResultCount}}"
+    #- debug: msg="{{gtsstatus_result.stdout_lines|gtsOpconCutFluff}}"
 
     - fail: msg="One or more processes are not in their expected state"
-      when: gtsstatus_result.stdout_lines|gtsOpconResultCount > 0  and 
-            "'NewsService' not in {{item}}" and 
-            "'PerformanceLogger' not in {{item}}"
+      when: "'PerformanceLogger' not in item and 'NewsService' not in item and gtsstatus_result.stdout_lines|gtsOpconResultCount > 0"
       with_items: "{{gtsstatus_result.stdout_lines|gtsOpconCutFluff}}"
