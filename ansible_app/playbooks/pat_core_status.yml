@@ -12,7 +12,7 @@
     - debug: msg="{{gtsstatus_result.stdout_lines|gtsOpconCutFluff}}"
 
     - fail: msg="One or more processes are not in their expected state"
-      when: gtsstatus_result.stdout_lines|length > 20  #and 
-            #"'NewsService' not in {{item}}" and 
-            #"'PerformanceLogger' not in {{item}}"
-      #with_items: "{{gtsstatus_result.stdout_lines}}"
+      when: gtsstatus_result.stdout_lines|gtsOpconResultCount > 0  and 
+            "'NewsService' not in {{item}}" and 
+            "'PerformanceLogger' not in {{item}}"
+      with_items: "{{gtsstatus_result.stdout_lines|gtsOpconCutFluff}}"
