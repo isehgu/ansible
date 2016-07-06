@@ -8,3 +8,4 @@ proxy_setting:
 
 oat_env: 038
 gtsstatus: echo 'echo "gtsstatus" | opcon -s' | gtsenv
+gtsstatus_m: echo 'echo "gtsstatus -m" | opcon -s' | gtsenv
