@@ -1,0 +1,10 @@
+---
+- host: td-pat01.test.ise.com
+  gather_facts: False
+  tasks:
+    - name: gtsstatus
+      # shell: echo 'echo "gtsstatus" | opcon -s' | gtsenv {{oat_env|quote}}
+      shell: {{gtsstatus}} {{oat_env|quote}}
+      register: gtsstatus_result
+
+    - debug: msg={{gtsstatus_result.stdout_lines}}

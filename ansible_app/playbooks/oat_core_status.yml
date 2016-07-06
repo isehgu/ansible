@@ -1,0 +1,6 @@
+---
+- host: tc-oat01.test.ise.com
+  gather_facts: False
+  tasks:
+    - name: gtsstatus
+      shell: echo 'echo "gtsstatus" | opcon -s' | gtsenv {{oat_env|quote}}

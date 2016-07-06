@@ -5,3 +5,6 @@ proxy_setting:
   http_proxy: http://proxy2.inf.ise.com:3128
   https_proxy: http://proxy2.inf.ise.com:3128
   proxy: http://proxy2.inf.ise.com:3128
+
+oat_env: 038
+gtsstatus: echo 'echo "gtsstatus" | opcon -s' | gtsenv
