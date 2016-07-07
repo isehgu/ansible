@@ -2,22 +2,22 @@
 - name: Env is production
   set_fact:
     env: "prod"
-    count: "2"
+    count: 2
   when: "'{{prefix}}' == 'tacstack'"
 
 - name: Env is test
   set_fact:
     env: "testenv"
-    count: "3"
+    count: 3
   when: "'{{prefix}}' != 'tacstack'"
 
 - name: MAP container status
   shell: docker ps | grep {{prefix}}_
   register: map_container_result
   changed_when: False
- 
+
 - fail: msg="Not all containers were started successfully"
-  when: "map_container_result.stdout.count('{{prefix}}_') < '{{count}}'"
+  when: "map_container_result.stdout.count('{{prefix}}_') < {{count}}"
 
 - name: verify map service
   command: docker exec {{prefix}}_mapapp{{env}}_1 supervisorctl status map
