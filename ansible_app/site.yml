@@ -1,2 +1,4 @@
 ---
 - include: playbooks/proxy.yml
+- include: map.yml
+- include: gts_core.yml

@@ -1,2 +1,14 @@
 ---
 # tasks file for map
+- include: map_status.yml
+  tags: ['map_status']
+
+# - include: map_recovery.yml
+#   tags: ['map_prod_recovery']
+#   vars:
+#     result_count: 2
+
+# - include: map_status.yml
+#   tags: ['map_test_recovery']
+#   vars:
+#     result_count: 3
