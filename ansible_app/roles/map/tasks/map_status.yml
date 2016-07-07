@@ -1,6 +1,16 @@
 ---
+- name: Env is production
+  set_fact:
+    env: "prod"
+  when: "'{{prefix}}' == 'tacstack'"
+
+- name: Env is test
+  set_fact:
+    env: "testenv"
+  when: "'{{prefix}}' != 'tacstack'"
+
 - name: verify map service
-  command: docker exec {{prefix}}_mapappprod_1 supervisorctl status map
+  command: docker exec {{prefix}}_mapapp{{env}}_1 supervisorctl status map
   register: map_status
   changed_when: false
   #until: "'RUNNING' not in map_status.stdout"
@@ -10,7 +20,7 @@
 #- debug: msg="{{map_status.stdout}}"
 
 - name: verify nodejs service
-  command: docker exec {{prefix}}_mapappprod_1 supervisorctl status nodejs
+  command: docker exec {{prefix}}_mapapp{{env}}_1 supervisorctl status nodejs
   register: node_status
   until: "node_status.stdout.count('RUNNING') > 0"
   retries: 5
@@ -19,7 +29,7 @@
 #- debug: msg="{{node_status.stdout}}"
 
 - name: verify mysql service
-  command: docker exec {{prefix}}_mapappprod_1 supervisorctl status mysql
+  command: docker exec {{prefix}}_mapapp{{env}}_1 supervisorctl status mysql
   register: mysql_status
   until: "mysql_status.stdout.count('RUNNING') > 0"
   retries: 5
@@ -28,7 +38,7 @@
 #- debug: msg="{{mysql_status.stdout}}"
 
 - name: verify httpd service has started
-  command: docker exec {{prefix}}_mapappprod_1 supervisorctl status httpd
+  command: docker exec {{prefix}}_mapapp{{env}}_1 supervisorctl status httpd
   register: httpd_status
   until: "httpd_status.stdout.count('RUNNING') > 0"
   retries: 5
