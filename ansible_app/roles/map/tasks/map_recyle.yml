@@ -1,0 +1,15 @@
+---
+- hosts: map_docker
+  gather_facts: False
+  tasks:
+    - name: Stopping MAP related containers
+      command: chdir=/home/core/tacstack ~/bin/docker-compose -f docker-compose-prod.yml stop
+      changed_when: False
+
+    - wait_for: port=80 state=drained
+
+    - name: Pausing to avoid httpd startup issue when restart happens too quickly
+      pause: seconds=15
+
+- include: map_recovery.yml
+  tags: ['prod']
