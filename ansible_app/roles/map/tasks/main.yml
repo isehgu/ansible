@@ -12,10 +12,12 @@
     count: 3
   when: "'{{prefix}}' != 'tacstack'"
 
-- include: map_status.yml
+- name: Checking status
+  include: map_status.yml
   when: runto == 'admin' and todo == "status"
 
-- include: map_recovery.yml
+- name: MAP recovery
+  include: map_recovery.yml
   when: runto == 'admin' and todo == "recovery"
   vars:
     result_count: 2
