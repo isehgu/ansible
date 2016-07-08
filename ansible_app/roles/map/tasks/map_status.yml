@@ -56,7 +56,7 @@
   changed_when: false
 
 - name: verify map page loads
-  uri: return_content=yes url=http://td-tac01.test.ise.com
+  uri: return_content=yes url={{map_prod_url}}
   # Try to load the page only when it's map production
   # Need to enhance this so it can extract test container ports
   when: "'{{prefix}}' == 'tacstack'"

@@ -1,0 +1,7 @@
+---
+# Top level playbook for map
+- hosts: map_docker
+  gather_facts: False
+  roles:
+    - role: map
+      runto: "admin"

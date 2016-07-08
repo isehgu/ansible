@@ -1,6 +1,7 @@
 ---
 # tasks file for map
 - include: map_status.yml
+  when: runto == 'admin'
   tags: ['map_status']
 
 # - include: map_recovery.yml
