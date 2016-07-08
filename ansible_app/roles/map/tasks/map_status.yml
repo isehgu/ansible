@@ -47,7 +47,7 @@
   uri: return_content=yes url={{map_prod_url}}
   # Try to load the page only when it's map production
   # Need to enhance this so it can extract test container ports
-  when: "'{{prefix}}' == 'tacstack'"
+  when: env == 'prod'
   register: map_content
   failed_when: "'<title>MAP</title>' not in map_content.content"
 
