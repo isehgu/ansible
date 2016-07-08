@@ -17,7 +17,7 @@
   changed_when: False
 
 - fail: msg="Not all containers were started successfully"
-  when: "map_container_result.stdout.count('{{prefix}}_') < {{count}}"
+  when: "map_container_result.stdout.count('{{prefix}}_') < count"
 
 - name: verify map service
   command: docker exec {{prefix}}_mapapp{{env}}_1 supervisorctl status map
