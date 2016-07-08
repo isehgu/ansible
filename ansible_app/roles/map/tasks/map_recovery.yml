@@ -1,113 +1,67 @@
 ---
-- hosts: map_docker
-  gather_facts: false
-  tasks:
-    - name: Check MAP container status
-      shell: docker ps | grep han_
-      register: map_container_result
-      ignore_errors: True
-      changed_when: False
-      tags: ['test']
+- name: Check MAP container status
+  shell: docker ps | grep {{prefix}}_
+  register: map_container_result
+  ignore_errors: True
+  changed_when: False
 
-    #- debug: var=map_container_result
+#- debug: var=map_container_result
 
-    - name: Start map container if needed
-      # This is using start instead of restart because one can't restart a downed container. docker would fail.
-      command: chdir=/home/core/tacstack ~/bin/docker-compose -f docker-compose-testenv.yml -p han start 
-      changed_when: False
-      when: "map_container_result.stdout.count('han_') < 3"
-      tags: ['test']
-      
-    - name: Re-check MAP container status
-      shell: docker ps | grep han_
-      register: map_container_result
-      changed_when: False
-      tags: ['test']
-     
-    - fail: msg="Not all containers were started successfully"
-      when: "map_container_result.stdout.count('han_') < 3"
-      tags: ['test']
+- name: Start map container if needed
+  # This is using start instead of restart because one can't restart a downed container. docker would fail.
+  command: chdir=/home/core/tacstack ~/bin/docker-compose -f docker-compose-prod.yml start
+  changed_when: False
+  when: "map_container_result.stdout.count('tacstack_') < 2"
+  
+- name: Re-check MAP container status
+  shell: docker ps | grep tacstack_
+  register: map_container_result
+  changed_when: False
+  # tags: ['prod']
+ 
+- fail: msg="Not all containers were started successfully"
+  when: "map_container_result.stdout.count('tacstack_') < 2"
+  # tags: ['prod']
 
+- wait_for: host=0.0.0.0 port=80 timeout=30
+  # tags: ['prod']
+- wait_for: host=0.0.0.0 port=9001 timeout=30
+  # tags: ['prod']
+- wait_for: host=0.0.0.0 port=18930 timeout=30
+  # tags: ['prod']
+- wait_for: host=0.0.0.0 port=18922 timeout=30
+  # tags: ['prod']
+- wait_for: host=0.0.0.0 port=18906 timeout=30
+  # tags: ['prod']
 
-    #- debug: var=map_container_result
+- name: Verify httpd service has started
+  command: docker exec tacstack_mapappprod_1 supervisorctl status httpd
+  register: httpd_status
+  until: "httpd_status.stdout.count('RUNNING') > 0"
+  retries: 10
+  delay: 1
+  changed_when: false
+  # tags: ['prod']
 
-    # - name: Cleanup MAP by running MAPJanitor
-    #   command: docker exec tacstack_mapappprod_1 python /home/bdt/map/src/map_backend_server/MAPJanitor.py
-    #   register: janitor_result
-    #   changed_when: false
-    #   failed_when: "'Cleanup Done!' not in janitor_result.stdout"
+- name: Cleanup MAP by running MAPJanitor
+  command: docker exec tacstack_mapappprod_1 python /home/bdt/map/src/map_backend_server/MAPJanitor.py
+  register: janitor_result
+  changed_when: false
+  failed_when: "'Cleanup Done!' not in janitor_result.stdout"
+  # tags: ["prod"]
 
-    # - name: Start MAP related services
-#############################################################################################################
-- hosts: map_docker
-  gather_facts: false
-  tags: ['prod']
-  tasks:
-    - name: Check MAP container status
-      shell: docker ps | grep tacstack_
-      register: map_container_result
-      ignore_errors: True
-      changed_when: False
-      #tags: ['prod']
+- name: Start MAP related services
+  command: docker exec tacstack_mapappprod_1 supervisorctl start map nodejs
+  register: map_app_result
+  changed_when: False
+  # tags: ["prod"]
 
-    #- debug: var=map_container_result
+- fail: msg="One of more MAP app didn't start successfully"
+  when: "map_app_result.stdout.count('started') < 2"
+  # tags: ["prod"]
 
-    - name: Start map container if needed
-      # This is using start instead of restart because one can't restart a downed container. docker would fail.
-      command: chdir=/home/core/tacstack ~/bin/docker-compose -f docker-compose-prod.yml start
-      changed_when: False
-      when: "map_container_result.stdout.count('tacstack_') < 2"
-      # tags: ['prod']
-      
-    - name: Re-check MAP container status
-      shell: docker ps | grep tacstack_
-      register: map_container_result
-      changed_when: False
-      # tags: ['prod']
-     
-    - fail: msg="Not all containers were started successfully"
-      when: "map_container_result.stdout.count('tacstack_') < 2"
-      # tags: ['prod']
-
-    - wait_for: host=0.0.0.0 port=80 timeout=30
-      # tags: ['prod']
-    - wait_for: host=0.0.0.0 port=9001 timeout=30
-      # tags: ['prod']
-    - wait_for: host=0.0.0.0 port=18930 timeout=30
-      # tags: ['prod']
-    - wait_for: host=0.0.0.0 port=18922 timeout=30
-      # tags: ['prod']
-    - wait_for: host=0.0.0.0 port=18906 timeout=30
-      # tags: ['prod']
-
-    - name: Verify httpd service has started
-      command: docker exec tacstack_mapappprod_1 supervisorctl status httpd
-      register: httpd_status
-      until: "httpd_status.stdout.count('RUNNING') > 0"
-      retries: 10
-      delay: 1
-      changed_when: false
-      # tags: ['prod']
-
-    - name: Cleanup MAP by running MAPJanitor
-      command: docker exec tacstack_mapappprod_1 python /home/bdt/map/src/map_backend_server/MAPJanitor.py
-      register: janitor_result
-      changed_when: false
-      failed_when: "'Cleanup Done!' not in janitor_result.stdout"
-      # tags: ["prod"]
-
-    - name: Start MAP related services
-      command: docker exec tacstack_mapappprod_1 supervisorctl start map nodejs
-      register: map_app_result
-      changed_when: False
-      # tags: ["prod"]
-
-    - fail: msg="One of more MAP app didn't start successfully"
-      when: "map_app_result.stdout.count('started') < 2"
-      # tags: ["prod"]
-
-    - name: verify map page loads
-      uri: return_content=yes url=http://td-tac01.test.ise.com
-      register: map_content
-      failed_when: "'<title>MAP</title>' not in map_content.content"
-      # tags: ['prod']
+- name: verify map page loads
+  uri: return_content=yes url=http://td-tac01.test.ise.com
+  register: map_content
+  failed_when: "'<title>MAP</title>' not in map_content.content"
+  # tags: ['prod']

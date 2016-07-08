@@ -1,16 +1,4 @@
 ---
-- name: Env is production
-  set_fact:
-    env: "prod"
-    count: 2
-  when: "'{{prefix}}' == 'tacstack'"
-
-- name: Env is test
-  set_fact:
-    env: "testenv"
-    count: 3
-  when: "'{{prefix}}' != 'tacstack'"
-
 - name: MAP container status
   shell: docker ps | grep {{prefix}}_
   register: map_container_result

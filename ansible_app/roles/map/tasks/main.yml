@@ -1,13 +1,24 @@
 ---
 # tasks file for map
-- include: map_status.yml
-  when: runto == 'admin'
-  tags: ['map_status']
+- name: Env is production
+  set_fact:
+    env: "prod"
+    count: 2
+  when: "'{{prefix}}' == 'tacstack'"
 
-# - include: map_recovery.yml
-#   tags: ['map_prod_recovery']
-#   vars:
-#     result_count: 2
+- name: Env is test
+  set_fact:
+    env: "testenv"
+    count: 3
+  when: "'{{prefix}}' != 'tacstack'"
+
+- include: map_status.yml
+  when: runto == 'admin' and todo == "status"
+
+- include: map_recovery.yml
+  when: runto == 'admin' and todo == "recovery"
+  vars:
+    result_count: 2
 
 # - include: map_status.yml
 #   tags: ['map_test_recovery']

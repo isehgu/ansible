@@ -1,9 +1,9 @@
 ---
-# Top level playbook for map admin
+# Top level playbook for map provision
 - include: playbooks/proxy.yml
 
 - hosts: map_docker
   gather_facts: False
   roles:
     - role: map
-      runto: "admin"
+      runto: "provision"

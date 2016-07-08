@@ -1,6 +1,0 @@
----
-# Top level playbook for map
-- hosts: map_docker
-  gather_facts: False
-  roles:
-    - map
