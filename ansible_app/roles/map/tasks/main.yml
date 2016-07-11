@@ -1,11 +1,24 @@
 ---
 # tasks file for map
+
+# Check for user input
 - fail: msg="Variable prefix is not defined"
   when: "not prefix"
 
 - fail: msg="Variable todo is not defined"
   when: "not todo"
-  
+
+# Check if user input is valid
+- name: Check if prefix is valid
+  shell: docker ps -a | grep {{prefix}}_
+  register: map_container_result
+  ignore_errors: True
+  changed_when: False
+
+- fail: msg="Invalid prefix"
+  when: "map_container_result.stdout.count('{{prefix}}_') <= 0"
+
+# Set needed variables base on user input
 - name: Env is production
   set_fact:
     env: "prod"
