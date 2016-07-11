@@ -11,6 +11,7 @@
   command: docker exec {{prefix}}_mapapp{{env}}_1 supervisorctl status map
   register: map_status
   changed_when: false
+  when: env == 'prod'
   #until: "'RUNNING' not in map_status.stdout"
   until: "map_status.stdout.count('RUNNING') > 0"
   retries: 5
@@ -20,6 +21,7 @@
 - name: verify nodejs service
   command: docker exec {{prefix}}_mapapp{{env}}_1 supervisorctl status nodejs
   register: node_status
+  when: env == 'prod'
   until: "node_status.stdout.count('RUNNING') > 0"
   retries: 5
   delay: 1
@@ -29,6 +31,7 @@
 - name: verify mysql service
   command: docker exec {{prefix}}_mapapp{{env}}_1 supervisorctl status mysql
   register: mysql_status
+  when: env == 'prod'
   until: "mysql_status.stdout.count('RUNNING') > 0"
   retries: 5
   delay: 1
@@ -38,6 +41,7 @@
 - name: verify httpd service has started
   command: docker exec {{prefix}}_mapapp{{env}}_1 supervisorctl status httpd
   register: httpd_status
+  when: env == 'prod'
   until: "httpd_status.stdout.count('RUNNING') > 0"
   retries: 5
   delay: 1
