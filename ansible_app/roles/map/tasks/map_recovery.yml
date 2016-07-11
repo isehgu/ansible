@@ -9,7 +9,7 @@
   ignore_errors: True
   changed_when: False
 
-- fail: msg="One or more container is running, please run map_recyle.yml instead"
+- fail: msg="One or more container is running (run map_recycle) or command exited with error (is prefix correct?)"
   when: (map_container_result.stdout.count('{{prefix}}_') > 0) or
         (map_container_result.rc == 1)
 
