@@ -1,13 +1,23 @@
 ---
+# This is under assumption that MAP containers are down.
+# If one or more MAP containers are up, then map_recycle.yml should be used
+# This playbook would error out if one or more container is running
+
 - name: Check MAP container status
   shell: docker ps | grep {{prefix}}_
   register: map_container_result
   ignore_errors: True
   changed_when: False
 
+- fail: msg="One or more container is running, please run map_recyle.yml instead"
+  when: "map_container_result.stdout.count('{{prefix}}_') > 0"
+
 #- debug: var=map_container_result
 
-- name: Start map container if needed
+# Now that we've confirmed all containers are in a down state,
+# we will need to restart them again to perform cleanup.
+
+- name: Start map container
   # This is using start instead of restart because one can't restart a downed container. docker would fail.
   command: chdir=/home/core/tacstack ~/bin/docker-compose -f docker-compose-{{env}}.yml start
   changed_when: False
@@ -18,24 +28,25 @@
   register: map_container_result
   changed_when: False
 
- 
-- fail: msg="Not all containers were started successfully"
-  when: "map_container_result.stdout.count('{{prefix}}_') < count"
-
 # Port check should be dynamic. For now it's hardcoded to prod ports only
-- wait_for: host=0.0.0.0 port=80 timeout=30
+- name: Wait for port 80 to open
+  wait_for: host=0.0.0.0 port=80 timeout=30
   when: env == 'prod'
 
-- wait_for: host=0.0.0.0 port=9001 timeout=30
+- name: Wait for port 9001 to open
+  wait_for: host=0.0.0.0 port=9001 timeout=30
   when: env == 'prod'
 
-- wait_for: host=0.0.0.0 port=18930 timeout=30
+- name: Wait for port 18930 to open
+  wait_for: host=0.0.0.0 port=18930 timeout=30
   when: env == 'prod'
 
-- wait_for: host=0.0.0.0 port=18922 timeout=30
+- name: Wait for port 18922 to open
+  wait_for: host=0.0.0.0 port=18922 timeout=30
   when: env == 'prod'
 
-- wait_for: host=0.0.0.0 port=18906 timeout=30
+- name: Wait for port 18906 to open
+  wait_for: host=0.0.0.0 port=18906 timeout=30
   when: env == 'prod'
 
 - name: Verify httpd service has started

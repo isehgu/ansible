@@ -12,7 +12,7 @@
     count: 3
   when: "'{{prefix}}' != 'tacstack'"
 
-- name: Checking status
+- name: MAP Status
   include: map_status.yml
   when: runto == 'admin' and todo == "status"
 
