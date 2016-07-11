@@ -74,7 +74,8 @@
 
 
 - fail: msg="One of more MAP app didn't start successfully"
-  when: "map_app_result.stdout.count('started') < count"
+  when: (map_app_result.stdout.count('started') < count) and 
+        (env == 'prod')
 
 
 - name: verify map page loads

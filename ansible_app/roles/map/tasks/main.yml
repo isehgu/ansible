@@ -2,10 +2,12 @@
 # tasks file for map
 
 # Check for user input
-- fail: msg="Variable prefix is not defined"
+- name: Checking for variable prefix
+  fail: msg="Variable prefix is not defined"
   when: "not prefix"
 
-- fail: msg="Variable todo is not defined"
+- name: Checking for variable todo
+  fail: msg="Variable todo is not defined"
   when: "not todo"
 
 # Check if user input is valid
