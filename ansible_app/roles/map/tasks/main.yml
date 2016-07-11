@@ -33,14 +33,14 @@
     count: 3
   when: "'{{prefix}}' != 'tacstack'"
 
-- name: MAP Status
+- name: MAP Status Requested
   include: map_status.yml
   when: runto == 'admin' and todo == "status"
 
-- name: MAP recovery
+- name: MAP Recovery Requested
   include: map_recovery.yml
   when: runto == 'admin' and todo == "recovery"
 
-- name: MAP recycle
+- name: MAP Recycle Requested
   include: map_recycle.yml
   when: runto == 'admin' and todo == "recycle"
