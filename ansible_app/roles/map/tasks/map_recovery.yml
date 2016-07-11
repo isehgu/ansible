@@ -19,7 +19,7 @@
 
 - name: Start map container
   # This is using start instead of restart because one can't restart a downed container. docker would fail.
-  command: chdir=/home/core/tacstack ~/bin/docker-compose -f docker-compose-{{env}}.yml start
+  command: chdir=/home/core/tacstack ~/bin/docker-compose -f docker-compose-{{env}}.yml -p {{prefix}} start
   changed_when: False
   when: "map_container_result.stdout.count('{{prefix}}_') < count"
   

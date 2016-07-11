@@ -1,5 +1,11 @@
 ---
 # tasks file for map
+- name: Variable prefix is not defined
+  failed_when: "not prefix"
+
+- name: Variable todo is not defined
+  failed_when: "not todo"
+  
 - name: Env is production
   set_fact:
     env: "prod"
@@ -19,10 +25,7 @@
 - name: MAP recovery
   include: map_recovery.yml
   when: runto == 'admin' and todo == "recovery"
-  vars:
-    result_count: 2
 
-# - include: map_status.yml
-#   tags: ['map_test_recovery']
-#   vars:
-#     result_count: 3
+- name: MAP recycle
+  include: map_recycle.yml
+  when: runto == 'admin' and todo == "recycle"
