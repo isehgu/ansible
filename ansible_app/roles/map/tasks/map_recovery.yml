@@ -10,7 +10,8 @@
   changed_when: False
 
 - fail: msg="One or more container is running, please run map_recyle.yml instead"
-  when: "map_container_result.stdout.count('{{prefix}}_') > 0"
+  when: (map_container_result.stdout.count('{{prefix}}_') > 0) or
+        (map_container_result.rc == 1)
 
 #- debug: var=map_container_result
 
