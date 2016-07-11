@@ -70,12 +70,8 @@
   command: docker exec tacstack_mapapp{{env}}_1 supervisorctl start map nodejs
   register: map_app_result
   changed_when: False
+  failed_when: "map_app_result.stdout.count('started') < count"
   when: env == 'prod'
-
-
-- fail: msg="One of more MAP app didn't start successfully"
-  when: (map_app_result.stdout.count('started') < count) and 
-        (env == 'prod')
 
 
 - name: verify map page loads
