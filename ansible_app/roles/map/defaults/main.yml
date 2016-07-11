@@ -1,2 +1,7 @@
 ---
 # defaults file for map
+# Run MAP tasks for provision
+# runto: "provision"
+# Run MAP tasks for admin
+# runto: "admin"
+map_prod_url: "http://td-tac01.test.ise.com"

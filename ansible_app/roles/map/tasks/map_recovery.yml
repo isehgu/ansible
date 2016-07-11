@@ -1,0 +1,81 @@
+---
+# This is under assumption that MAP containers are down.
+# If one or more MAP containers are up, then map_recycle.yml should be used
+# This playbook would error out if one or more container is running
+
+- name: Check MAP container status
+  shell: docker ps | grep {{prefix}}_
+  register: map_container_result
+  ignore_errors: True
+  changed_when: False
+
+- fail: msg="One or more container is running (run map_recycle)"
+  when: "map_container_result.stdout.count('{{prefix}}_') > 0"
+
+#- debug: var=map_container_result
+
+# Now that we've confirmed all containers are in a down state,
+# we will need to restart them again to perform cleanup.
+
+- name: Start map container
+  # This is using start instead of restart because one can't restart a downed container. docker would fail.
+  command: chdir=/home/core/tacstack ~/bin/docker-compose -f docker-compose-{{env}}.yml -p {{prefix}} start
+  changed_when: False
+  when: "map_container_result.stdout.count('{{prefix}}_') < count"
+  
+- name: Re-check MAP container status
+  shell: docker ps | grep {{prefix}}_
+  register: map_container_result
+  changed_when: False
+
+# Port check should be dynamic. For now it's hardcoded to prod ports only
+- name: Wait for port 80 to open
+  wait_for: host=0.0.0.0 port=80 timeout=30
+  when: env == 'prod'
+
+- name: Wait for port 9001 to open
+  wait_for: host=0.0.0.0 port=9001 timeout=30
+  when: env == 'prod'
+
+- name: Wait for port 18930 to open
+  wait_for: host=0.0.0.0 port=18930 timeout=30
+  when: env == 'prod'
+
+- name: Wait for port 18922 to open
+  wait_for: host=0.0.0.0 port=18922 timeout=30
+  when: env == 'prod'
+
+- name: Wait for port 18906 to open
+  wait_for: host=0.0.0.0 port=18906 timeout=30
+  when: env == 'prod'
+
+- name: Verify httpd service has started
+  command: docker exec tacstack_mapapp{{env}}_1 supervisorctl status httpd
+  register: httpd_status
+  until: "httpd_status.stdout.count('RUNNING') > 0"
+  retries: 10
+  delay: 1
+  changed_when: false
+  when: env == 'prod'
+
+- name: Cleanup MAP by running MAPJanitor
+  command: docker exec tacstack_mapapp{{env}}_1 python /home/bdt/map/src/map_backend_server/MAPJanitor.py
+  register: janitor_result
+  changed_when: false
+  failed_when: "'Cleanup Done!' not in janitor_result.stdout"
+  when: env == 'prod'
+
+
+- name: Start MAP related services
+  command: docker exec tacstack_mapapp{{env}}_1 supervisorctl start map nodejs
+  register: map_app_result
+  changed_when: False
+  failed_when: "map_app_result.stdout.count('started') < count"
+  when: env == 'prod'
+
+
+- name: verify map page loads
+  uri: return_content=yes url={{map_prod_url}}
+  when: env == 'prod'
+  register: map_content
+  failed_when: "'<title>MAP</title>' not in map_content.content"
