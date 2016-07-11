@@ -1,5 +1,9 @@
 ---
 # Top level playbook for map admin
+# input variable:
+# prefix=[container prefix]
+# todo=[recovery|status]
+
 - include: playbooks/proxy.yml
 
 - hosts: map_docker
