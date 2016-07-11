@@ -1,10 +1,10 @@
 ---
 # tasks file for map
-- name: Variable prefix is not defined
-  failed_when: "not prefix"
+- fail: msg="Variable prefix is not defined"
+  when: "not prefix"
 
-- name: Variable todo is not defined
-  failed_when: "not todo"
+- fail: msg="Variable todo is not defined"
+  when: "not todo"
   
 - name: Env is production
   set_fact:
