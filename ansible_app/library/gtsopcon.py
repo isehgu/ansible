@@ -4,13 +4,13 @@ import subprocess
 
 
 DOCUMENTATION = '''
-    Run commands within a gts env.
+    Run opcon command.
 
 '''
 
 EXAMPLE = '''
-    - name: Run command inside gtsenv
-      gtsenv: command="gtsCtrl status" env_number=038
+    - name: Run opcon commands
+      gtsopcon: command="gtsstatus -m" env_number=038
 
 '''
 
@@ -28,8 +28,8 @@ def main():
         )
 
     env_number = module.params['env_number']
-    command = '"' + module.params['command'] + '"'
-    real_command = "echo " + command + "| gtsenv " + env_number
+    command = module.params['command']
+    real_command = "echo 'echo " + command + "| opcon -s' | gtsenv " + env_number
     # Now use subprocess, run the command, capture output, parse it,
     # and interpret if it's successful then constructure resulting json
     command_result = subprocess.Popen(

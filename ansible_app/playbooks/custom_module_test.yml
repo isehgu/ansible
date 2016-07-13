@@ -6,4 +6,11 @@
 
      #- gtsenv: env_number=038 command="gtsCtrl status" 
      #- gtsenv: env_number=038 command="gtsCtr status" 
-     - gtsenv: env_number=039 command="gtsCtrl status" 
+     #- gtsenv: env_number=039 command="gtsCtrl status" 
+
+    - name: Success test
+      gtsopcon: command="gtsstatus -m" env_number=038
+
+    - name: Failed test
+      gtsopcon: command='gggg' env_number=038
+
