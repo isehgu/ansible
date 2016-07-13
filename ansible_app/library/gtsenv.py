@@ -35,8 +35,7 @@ def main():
     # Now use subprocess, run the command, capture output, parse it,
     # and interpret if it's successful then constructure resulting json
     command_result = subprocess.Popen(
-        shlex_command, shell=True,
-        stdout=subprocess.PIPE, stderr=subprocess.PIPE
+        shlex_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE
         )
 
     #######################
