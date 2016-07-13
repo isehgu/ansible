@@ -1,0 +1,22 @@
+---
+- hosts: td-pat201.test.ise.com
+  gather_facts: False
+  tasks:
+    ###########################################
+    #  Tests for gtsenv module
+    ###########################################
+    - gtsenv: env_number=038 command='echo "gtsstatus -m" | opcon -s'
+
+    - gtsenv: env_number=038 command="gtsCtrl status" 
+    - gtsenv: env_number=038 command="gtsCtr status" 
+    #- gtsenv: env_number=039 command="gtsCtrl status" 
+
+    ###########################################
+    #  Tests for gtsopcon module
+    ###########################################
+    - name: Success test
+      gtsopcon: command="gtsstatus -m" env_number=038
+
+    - name: Failed test
+      gtsopcon: command='gggg' env_number=038
+

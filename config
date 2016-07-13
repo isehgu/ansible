@@ -9,4 +9,5 @@ Host *.test.ise.com
   IdentityFile /opt/ansible/ansible_cred/ansible
   StrictHostKeyChecking no
   UserKnownHostsFile=/dev/null
+  LogLevel quiet
 
