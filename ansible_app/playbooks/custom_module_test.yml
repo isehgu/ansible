@@ -5,11 +5,11 @@
     ###########################################
     #  Tests for gtsenv module
     ###########################################
-     # - gtsenv: env_number=038 command='echo "gtsstatus -m" | opcon -s'
+    - gtsenv: env_number=038 command='echo "gtsstatus -m" | opcon -s'
 
-     #- gtsenv: env_number=038 command="gtsCtrl status" 
-     #- gtsenv: env_number=038 command="gtsCtr status" 
-     #- gtsenv: env_number=039 command="gtsCtrl status" 
+    - gtsenv: env_number=038 command="gtsCtrl status" 
+    - gtsenv: env_number=038 command="gtsCtr status" 
+    #- gtsenv: env_number=039 command="gtsCtrl status" 
 
     ###########################################
     #  Tests for gtsopcon module
