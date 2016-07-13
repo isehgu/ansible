@@ -2,6 +2,8 @@
 - hosts: td-pat201.test.ise.com
   gather_facts: False
   tasks:
-    - name: Test out gtsenv module
-      gtsenv: env_number=038 command=gtsCtrl status
-      
+    # - name: Test out gtsenv module
+    #   gtsenv: env_number=038 command=gtsCtrl status
+
+      - HanModule:
+        
