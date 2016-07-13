@@ -4,13 +4,21 @@ import subprocess
 
 
 DOCUMENTATION = '''
-    Run commands within a gts env.
+---
+module: gtsenv
+description: Run commands within a gts env.
+options:
+  env_number=:
+    description: gts env number
+  command=: 
+    description: command to run within the gts environment
 
+author: Han Gu
 '''
 
 EXAMPLE = '''
-    - name: Run command inside gtsenv
-      gtsenv: command="gtsCtrl status" env_number=038
+- name: Run command inside gtsenv
+  gtsenv: command="gtsCtrl status" env_number=038
 
 '''
 
