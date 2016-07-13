@@ -54,7 +54,7 @@ def main():
             if rc is not None:
                 break
         else:
-            stdoutlines.append(line)
+            stdoutlines.append(line.rstrip())
 
     stderr = command_result.stderr.read()
     stdout = ' '.join(stdoutlines)
