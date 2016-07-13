@@ -71,7 +71,7 @@ def main():
     if rc == 0:
         module.exit_json(**result)
     else:
-        module.fail_json(**result)
+        module.fail_json(msg='Command returned with error', **result)
 
 if __name__ == '__main__':
     main()
