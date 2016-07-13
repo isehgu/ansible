@@ -4,8 +4,16 @@ import subprocess
 
 
 DOCUMENTATION = '''
-    Run opcon command.
+---
+module: gtsopcon
+description: Run opcon commands
+options:
+  env_number=:
+    description: gts env number
+  command=:
+    description: opcon command to run
 
+author: Han Gu
 '''
 
 EXAMPLE = '''
