@@ -45,18 +45,16 @@ def main():
     stderr = ''
     stdout = ''
     stdoutlines = []
-    rc = command_result.wait()
-    for line in command_result.stdout.readline():
-        stdoutlines.append(line.rstrip())
-    # while True:
-    #     line = command_result.stdout.readline()
-    #     rc = command_result.poll()
 
-    #     if not line:
-    #         if rc is not None:
-    #             break
-    #     else:
-    #         stdoutlines.append(line)
+    while True:
+        line = command_result.stdout.readline()
+        rc = command_result.poll()
+
+        if not line:
+            if rc is not None:
+                break
+        else:
+            stdoutlines.append(line)
 
     stderr = command_result.stderr.read()
     stdout = ' '.join(stdoutlines)
