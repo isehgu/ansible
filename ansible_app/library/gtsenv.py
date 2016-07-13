@@ -52,7 +52,10 @@ def main():
             if rc is not None:
                 break
         else:
-            stdoutlines.append(line.rstrip())
+            if "Last login" in line:
+                continue
+            else:
+                stdoutlines.append(line.rstrip())
 
     stderr = command_result.stderr.read()
     stdout = ' '.join(stdoutlines)
