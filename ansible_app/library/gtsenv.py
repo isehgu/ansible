@@ -1,7 +1,6 @@
 #! /usr/bin/env python
 from ansible.module_utils.basic import AnsibleModule
 import subprocess
-import shlex
 
 
 DOCUMENTATION = '''
@@ -29,13 +28,13 @@ def main():
         )
 
     env_number = module.params['env_number']
-    command = '"' +module.params['command'] + '"'
+    command = '"' + module.params['command'] + '"'
     real_command = "echo " + command + "| gtsenv " + env_number
-    shlex_command = shlex.split(real_command)
     # Now use subprocess, run the command, capture output, parse it,
     # and interpret if it's successful then constructure resulting json
     command_result = subprocess.Popen(
-        real_command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE
+        real_command, shell=True,
+        stdout=subprocess.PIPE, stderr=subprocess.PIPE
         )
 
     #######################
@@ -59,14 +58,17 @@ def main():
     stdout = ' '.join(stdoutlines)
 
     result = {
-        'stdout': stdout,
-        'stdoutlines': stdoutlines,
         'rc': rc,
+        'command_executed': real_command,
         'stderr': stderr,
-        'real_command': real_command
+        'stdout': stdout,
+        'stdoutlines': stdoutlines
     }
 
-    module.exit_json(**result)
+    if rc == 0:
+        module.exit_json(**result)
+    else:
+        module.fail_json(**result)
 
 if __name__ == '__main__':
     main()
