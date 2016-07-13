@@ -30,7 +30,7 @@ def main():
 
     env_number = module.params['env_number']
     command = module.params['command']
-    real_command = command + "| gtsenv " + env_number
+    real_command = "echo " + command + "| gtsenv " + env_number
     shlex_command = shlex.split(real_command)
     # Now use subprocess, run the command, capture output, parse it,
     # and interpret if it's successful then constructure resulting json
