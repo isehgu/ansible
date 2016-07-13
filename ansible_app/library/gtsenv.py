@@ -29,13 +29,13 @@ def main():
         )
 
     env_number = module.params['env_number']
-    command = module.params['command']
+    command = '"' +module.params['command'] + '"'
     real_command = "echo " + command + "| gtsenv " + env_number
     shlex_command = shlex.split(real_command)
     # Now use subprocess, run the command, capture output, parse it,
     # and interpret if it's successful then constructure resulting json
     command_result = subprocess.Popen(
-        shlex_command, stdout=subprocess.PIPE, stderr=subprocess.PIPE
+        real_command, shell=True, stdout=subprocess.PIPE, stderr=subprocess.PIPE
         )
 
     #######################
@@ -63,7 +63,7 @@ def main():
         'stdoutlines': stdoutlines,
         'rc': rc,
         'stderr': stderr,
-        'shlex_list': shlex_command
+        'real_command': real_command
     }
 
     module.exit_json(**result)
