@@ -6,17 +6,20 @@ import subprocess
 DOCUMENTATION = '''
 ---
 module: gtsopcon
+author: Han Gu
 description: Run opcon commands
 options:
-  env_number=:
+  env_number:
+    required: True
     description: gts env number
-  command=:
+  command:
+    required: True
     description: opcon command to run
 
-author: Han Gu
+
 '''
 
-EXAMPLE = '''
+EXAMPLES = '''
     - name: Run opcon commands
       gtsopcon: command="gtsstatus -m" env_number=038
 
