@@ -50,33 +50,43 @@ def main():
 
     #######################
     # Reading command results
-    line = ''
+    # line = ''
+    # rc = ''
+    # stderr = ''
+    # stdout = ''
+    # stdoutlines = []
+    # while True:
+    #     line = command_result.stdout.readline()
+    #     rc = command_result.poll()
+
+    #     if not line:
+    #         if rc is not None:
+    #             break
+    #     else:
+    #         if "Last login" in line:
+    #             continue
+    #         else:
+    #             stdoutlines.append(line.rstrip())
+
+    # stderr = command_result.stderr.read()
+    # stdout = ' '.join(stdoutlines)
+    # command_result.stderr.close()
+    # command_result.stdout.close()
+
+    #######################
+    # Reading command results using communicate
     rc = ''
     stderr = ''
     stdout = ''
-    stdoutlines = []
-    while True:
-        line = command_result.stdout.readline()
-        rc = command_result.poll()
 
-        if not line:
-            if rc is not None:
-                break
-        else:
-            if "Last login" in line:
-                continue
-            else:
-                stdoutlines.append(line.rstrip())
-
-    stderr = command_result.stderr.read()
-    stdout = ' '.join(stdoutlines)
+    stdout, stderr = command_result.communicate()
+    rc = command_result.wait()
 
     result = {
         'rc': rc,
         'command_executed': real_command,
         'stderr': stderr,
-        'stdout': stdout,
-        #'stdoutlines': stdoutlines
+        'stdout': stdout
     }
 
     if rc == 0:
