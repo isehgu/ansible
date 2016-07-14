@@ -76,7 +76,7 @@ def main():
         'command_executed': real_command,
         'stderr': stderr,
         'stdout': stdout,
-        'stdoutlines': stdoutlines
+        #'stdoutlines': stdoutlines
     }
 
     if rc == 0:
