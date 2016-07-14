@@ -37,7 +37,8 @@ def main():
         )
 
     env_number = module.params['env_number']
-    command = '"' + module.params['command'] + '"'
+    #command = '"' + module.params['command'] + '"'
+    command = module.params['command']
     real_command = "echo " + command + "| gtsenv " + env_number
     # Now use subprocess, run the command, capture output, parse it,
     # and interpret if it's successful then constructure resulting json
