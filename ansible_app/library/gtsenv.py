@@ -37,9 +37,10 @@ def main():
         )
 
     env_number = module.params['env_number']
-    #command = '"' + module.params['command'] + '"'
-    command = module.params['command']
+    command = '"' + module.params['command'] + '"'
+    #command = module.params['command']
     real_command = "echo " + command + "| gtsenv " + env_number
+    #real_command = "ls -al | grep ansible_stuff"
     # Now use subprocess, run the command, capture output, parse it,
     # and interpret if it's successful then constructure resulting json
     # command_result = subprocess.Popen(
@@ -75,7 +76,7 @@ def main():
     rc = ''
     stderr = ''
     stdout = ''
-    (rc, stdout, stderr) = module.run_command(real_command)
+    (rc, stdout, stderr) = module.run_command(real_command, use_unsafe_shell=True)
     result = {
         'rc': rc,
         'command_executed': real_command,
