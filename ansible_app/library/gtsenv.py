@@ -41,10 +41,10 @@ def main():
     real_command = "echo " + command + "| gtsenv " + env_number
     # Now use subprocess, run the command, capture output, parse it,
     # and interpret if it's successful then constructure resulting json
-    command_result = subprocess.Popen(
-        real_command, shell=True,
-        stdout=subprocess.PIPE, stderr=subprocess.PIPE
-        )
+    # command_result = subprocess.Popen(
+    #     real_command, shell=True,
+    #     stdout=subprocess.PIPE, stderr=subprocess.PIPE
+    #     )
 
     #######################
     # Reading command results
