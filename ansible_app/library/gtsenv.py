@@ -48,33 +48,39 @@ def main():
 
     #######################
     # Reading command results
-    line = ''
+    # line = ''
+    # rc = ''
+    # stderr = ''
+    # stdout = ''
+    # stdoutlines = []
+    # while True:
+    #     line = command_result.stdout.readline()
+    #     rc = command_result.poll()
+
+    #     if not line:
+    #         if rc is not None:
+    #             break
+    #     else:
+    #         if "Last login" in line:
+    #             continue
+    #         else:
+    #             stdoutlines.append(line.rstrip())
+
+    # stderr = command_result.stderr.read()
+    # stdout = ' '.join(stdoutlines)
+
+    ################################################
+    # Using ansible's own run_command function
     rc = ''
     stderr = ''
     stdout = ''
-    stdoutlines = []
-    while True:
-        line = command_result.stdout.readline()
-        rc = command_result.poll()
-
-        if not line:
-            if rc is not None:
-                break
-        else:
-            if "Last login" in line:
-                continue
-            else:
-                stdoutlines.append(line.rstrip())
-
-    stderr = command_result.stderr.read()
-    stdout = ' '.join(stdoutlines)
-
+    (rc, stdout, stderr) = module.run_command(real_command)
     result = {
         'rc': rc,
         'command_executed': real_command,
         'stderr': stderr,
-        'stdout': stdout,
-        'stdoutlines': stdoutlines
+        'stdout': stdout
+        # 'stdoutlines': stdoutlines
     }
 
     if rc == 0:
