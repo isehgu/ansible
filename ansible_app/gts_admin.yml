@@ -1,0 +1,30 @@
+---
+# Top level playbook for gts Core
+# This is more complicated than MAP, since production and test are two sets of servers
+# For MAP, prod and test are both td-tac01
+# Option 1 --
+#   Include all nodes, and use conditional to run tasks only on hosts of the requested env.
+#   Downside is that ansible will have to loop through all nodes. Kind of wasteful
+# Option 2--
+#   Define a local host, and set env in local host. Then for the actual gts task, set hosts to that env variable
+
+- hosts: localhost
+  gather_facts: False
+  tasks:
+    - set_fact:
+        target_env: "pat_linux"
+      when: "'pat' == env"
+    
+    - set_fact:
+        target_env: "bdt"
+      when: "'bdt' == env"
+
+    - set_fact:
+        target_env: "oat_linux"
+      when: "'oat' == env"
+
+- hosts: {{hostvars.localhost.target_env}}
+  gather_facts: False
+  tasks:
+    - command: hsotname
+      changed_when: False

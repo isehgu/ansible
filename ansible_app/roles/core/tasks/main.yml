@@ -1,2 +1,14 @@
 ---
 # tasks file for core
+- name: Check for runto"
+  fail: "Variable runto is NOT provided"
+  when: "not runto"
+  
+- name: Check for env_number
+  fail: "Variable env_number is NOT provided"
+  when: "not env_number"
+
+- name: Check for env
+  fail: "Variable env is NOT provided"
+  when: "not env"
+

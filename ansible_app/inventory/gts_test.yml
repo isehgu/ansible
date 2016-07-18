@@ -29,3 +29,8 @@ pat_linux
 
 [bdt]
 td-bdt01.test.ise.com
+
+[core_nodes_in_test:children]
+oat_linux
+pat_linux
+bdt
