@@ -23,8 +23,8 @@
         target_env: "oat_linux"
       when: "'oat' == env"
 
-- hosts: {{hostvars.localhost.target_env}}
+- hosts: "{{hostvars.localhost.target_env}}"
   gather_facts: False
   tasks:
-    - command: hsotname
+    - command: hostname
       changed_when: False
