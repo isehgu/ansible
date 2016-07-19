@@ -44,7 +44,7 @@ tc-oat01.test.ise.com
 [bdt_opcon_host]
 td-bdt01.test.ise.com
 
-[opcon_hosts:children]
+[test_opcon_hosts:children]
 oat_opcon_host
 pat_opcon_host
 bdt_opcon_host
