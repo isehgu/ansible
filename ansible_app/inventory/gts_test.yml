@@ -34,3 +34,17 @@ td-bdt01.test.ise.com
 oat_linux
 pat_linux
 bdt
+
+[pat_opcon_host]
+td-pat201.test.ise.com
+
+[oat_opcon_host]
+tc-oat01.test.ise.com
+
+[bdt_opcon_host]
+td-bdt01.test.ise.com
+
+[opcon_hosts:children]
+oat_opcon_host
+pat_opcon_host
+bdt_opcon_host
