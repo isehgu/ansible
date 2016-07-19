@@ -1,14 +1,11 @@
 ---
 # tasks file for core
-- name: Check for runto"
-  fail: "Variable runto is NOT provided"
-  when: "not runto"
+# The following variables are given at this point
+# env_number
+# todo
+# opcon_flag
+- include: gts_opcon_status.yml
+  when: (opcon_flag == True) and (todo == 'status')
 
-- name: Check for env_number
-  fail: "Variable env_number is NOT provided"
-  when: "not env_number"
-
-- name: Check for todo
-  fail: "Variable todo is NOT provided"
-  when: "not todo"
-
+- include: gts_app_status.yml
+  when: (opcon_flag == False) and (todo == 'status')

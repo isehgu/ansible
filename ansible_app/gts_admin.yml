@@ -55,9 +55,13 @@
   hosts: "{{hostvars.localhost.target_opcon_host}}"
   roles:
     - role: core
+      vars:
+        opcon_flag: True
 
 - name: Non-Opcon
   hosts: "{{hostvars.localhost.target_env}}"
   roles:
     - role: core
+      vars:
+        opcon_flag: False
 

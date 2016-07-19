@@ -1,0 +1,4 @@
+---
+- name: gtsCtrl
+  gtsenv: command="gtsCtrl status" env_number="{{env_number}}"
+  changed_when: False
