@@ -5,3 +5,10 @@
   changed_when: False
 
 - debug: var=gtsCtrl_result.stdout_lines|cutLastLoginLine
+- debug: var=gtsCtrl_result.stdout_lines
+
+- name: test
+  fail: msg="failed because there are stuff showing, and it's not 'Last login'"
+  when: ('Last login' not in item) and (gtsCtrl_result.stdout_lines|cutLastLoginLine|count > 0)
+  with_items:
+    - "{{gtsCtrl_result.stdout_lines|cutLastLoginLine}}"

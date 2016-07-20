@@ -4,17 +4,14 @@
 
 
 def cutLastLoginLine(output_list):
-    """ Cut out everything above ======= including ======== from opcon output """
     result_list = []
-    separator = 0
 
     for line in output_list:
 
         if 'Last login' in line:
             continue
 
-        if separator:
-            result_list.append(line)
+        result_list.append(line)
 
     return result_list
 
