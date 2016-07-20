@@ -1,4 +1,7 @@
 ---
 - name: gtsCtrl
   gtsenv: command="gtsCtrl status" env_number="{{env_number}}"
+  register: gtsCtrl_result
   changed_when: False
+
+- debug: var=gtsCtrl_result.stdout_lines|cutLastLoginLine
