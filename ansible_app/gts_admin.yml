@@ -13,9 +13,9 @@
 - hosts: localhost
   gather_facts: False
   tasks:
-    - name: Check for env"
+    - name: Check for env
       fail: msg="Variable todo is NOT provided"
-      when: "not todo"
+      when: "not env"
 
     - name: Check for env_number
       fail: msg="Variable env_number is NOT provided"
@@ -55,13 +55,11 @@
   hosts: "{{hostvars.localhost.target_opcon_host}}"
   roles:
     - role: core
-      vars:
-        opcon_flag: True
+      opcon_flag: True
 
 - name: Non-Opcon
   hosts: "{{hostvars.localhost.target_env}}"
   roles:
     - role: core
-      vars:
-        opcon_flag: False
+      opcon_flag: False
 

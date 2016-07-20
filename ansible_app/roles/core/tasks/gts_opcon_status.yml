@@ -1,6 +1,6 @@
 ---
 - name: gtsstatus -m
-  opcon: command="gtsstatus -m" env_number="{{env_number}}"
+  gtsopcon: command="gtsstatus -m" env_number="{{env_number}}"
   register: gtsstatus_result
   ignore_errors: True
   changed_when: False
