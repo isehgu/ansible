@@ -1,5 +1,16 @@
 ---
 # Nested Loop Test
+# Output:
+changed: [localhost] => (item=[u'a', 1])
+changed: [localhost] => (item=[u'a', 2])
+changed: [localhost] => (item=[u'a', 3])
+changed: [localhost] => (item=[u'b', 1])
+changed: [localhost] => (item=[u'b', 2])
+changed: [localhost] => (item=[u'b', 3])
+changed: [localhost] => (item=[u'c', 1])
+changed: [localhost] => (item=[u'c', 2])
+changed: [localhost] => (item=[u'c', 3])
+
 - hosts: localhost
   vars:
     listvar1:
@@ -9,5 +20,5 @@
   tasks:
     - shell: echo "nested test a={{ item[0] }} b={{ item[1] }}"
       with_nested:
-        - listvar1
+        - "{{listvar1}}"
         - [ 1, 2, 3 ]
