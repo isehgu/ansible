@@ -1,24 +1,66 @@
 ---
 # Nested Loop Test
 # Output:
-changed: [localhost] => (item=[u'a', 1])
-changed: [localhost] => (item=[u'a', 2])
-changed: [localhost] => (item=[u'a', 3])
-changed: [localhost] => (item=[u'b', 1])
-changed: [localhost] => (item=[u'b', 2])
-changed: [localhost] => (item=[u'b', 3])
-changed: [localhost] => (item=[u'c', 1])
-changed: [localhost] => (item=[u'c', 2])
-changed: [localhost] => (item=[u'c', 3])
+# changed: [localhost] => (item=[u'a', 1])
+# changed: [localhost] => (item=[u'a', 2])
+# changed: [localhost] => (item=[u'a', 3])
+# changed: [localhost] => (item=[u'b', 1])
+# changed: [localhost] => (item=[u'b', 2])
+# changed: [localhost] => (item=[u'b', 3])
+# changed: [localhost] => (item=[u'c', 1])
+# changed: [localhost] => (item=[u'c', 2])
+# changed: [localhost] => (item=[u'c', 3])
 
+# - hosts: localhost
+#   vars:
+#     listvar1:
+#       - 'a'
+#       - 'b'
+#       - 'c'
+#   tasks:
+#     - shell: echo "nested test a={{ item[0] }} b={{ item[1] }}"
+#       with_nested:
+#         - "{{listvar1}}"
+#         - [ 1, 2, 3 ]
+####################################################
+# with_subelement test
+# Output:
 - hosts: localhost
   vars:
-    listvar1:
-      - 'a'
-      - 'b'
-      - 'c'
+    users:
+      - name: alice
+        authorized:
+          - /tmp/alice/onekey.pub
+          - /tmp/alice/twokey.pub
+        mysql:
+            password: mysql-password
+            hosts:
+              - "%"
+              - "127.0.0.1"
+              - "::1"
+              - "localhost"
+            privs:
+              - "*.*:SELECT"
+              - "DB1.*:ALL"
+      - name: bob
+        authorized:
+          - /tmp/bob/id_rsa.pub
+        mysql:
+            password: other-mysql-password
+            hosts:
+              - "db1"
+            privs:
+              - "*.*:SELECT"
+              - "DB2.*:ALL"
   tasks:
-    - shell: echo "nested test a={{ item[0] }} b={{ item[1] }}"
-      with_nested:
-        - "{{listvar1}}"
-        - [ 1, 2, 3 ]
+    - name: with_subelements
+      shell: echo "user={{ item.0.name }} key='{{ lookup('file', item.1) }}'"
+      with_subelements:
+         - "{{ users }}"
+         - authorized
+
+    - name: Nested with_subelements
+      shell: echo "name={{ item.0.name }} password={{ item.0.mysql.password }} host={{ item.1 }} priv={{ item.0.mysql.privs | join('/') }}"
+      with_subelements:
+        - "{{ users }}"
+        - mysql.hosts
