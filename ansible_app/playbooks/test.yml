@@ -1,6 +1,6 @@
 ---
 # Nested Loop Test
-- hosts: all
+- hosts: localhost
   vars:
     listvar1:
       - 'a'
