@@ -9,3 +9,17 @@
 
 - include: gts_app_status.yml
   when: (opcon_flag == False) and (todo == 'status')
+
+# This is recycling
+# There are two ways of recycling.
+# 1. via Opcon's start/stop
+# 2. via gtsCtrl, which is outside of opcon, and then opcon
+
+# First opcon only. This file can then be included into the gtsCtrl recycle
+- include: gts_opcon_recycle.yml
+  when: (opcon_flag == True) and (todo == 'recycle')
+
+# Deep recycle using gtsCtrl, and then opcon.
+# So this file should include opcon recycle
+- include: gts_app_recycle.yml
+  when: (opcon_flag == False) and (todo == 'status')

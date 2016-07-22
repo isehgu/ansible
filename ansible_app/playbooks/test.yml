@@ -1,4 +1,32 @@
 ---
+########################################################
+# Testing out split
+- hosts: localhost
+  gather_facts: False
+  vars:
+    mystring: "This is the greatest"
+  tasks:
+    - shell: echo "{{'This is the greatest' | stringSplit | listExtract(1)}}"
+
+########################################################
+# # Testing out filter 'default' with boolean values
+# - hosts: localhost
+#   gather_facts: False
+#   vars:
+#     #flag: "{{myflag|default('',True)}}"
+#     flag: "{{myflag | default(True)}}"
+#     #flag: "{{ ''|default('the string was empty', true) }}"
+#   tasks:
+#     - name: flag echo when False
+#       shell: echo "False flag:'{{flag}}'"
+#       when: flag == False
+
+#     - name: flag echo when True
+#       shell: echo "True flag:'{{flag}}'"
+#       when: flag == True
+  
+
+########################################################
 # Nested Loop Test
 # Output:
 # changed: [localhost] => (item=[u'a', 1])
@@ -24,43 +52,57 @@
 #         - [ 1, 2, 3 ]
 ####################################################
 # with_subelement test
-# Output:
-- hosts: localhost
-  vars:
-    users:
-      - name: alice
-        authorized:
-          - /tmp/alice/onekey.pub
-          - /tmp/alice/twokey.pub
-        mysql:
-            password: mysql-password
-            hosts:
-              - "%"
-              - "127.0.0.1"
-              - "::1"
-              - "localhost"
-            privs:
-              - "*.*:SELECT"
-              - "DB1.*:ALL"
-      - name: bob
-        authorized:
-          - /tmp/bob/id_rsa.pub
-        mysql:
-            password: other-mysql-password
-            hosts:
-              - "db1"
-            privs:
-              - "*.*:SELECT"
-              - "DB2.*:ALL"
-  tasks:
-    - name: with_subelements
-      shell: echo "user={{ item.0.name }} key='{{ lookup('file', item.1) }}'"
-      with_subelements:
-         - "{{ users }}"
-         - authorized
+# Output: Refer to comments before each task
+# - hosts: localhost
+#   vars:
+#     users:
+#       - name: alice
+#         authorized:
+#           - /tmp/alice/onekey.pub
+#           - /tmp/alice/twokey.pub
+#         mysql:
+#             password: mysql-password
+#             hosts:
+#               - "%"
+#               - "127.0.0.1"
+#               - "::1"
+#               - "localhost"
+#             privs:
+#               - "*.*:SELECT"
+#               - "DB1.*:ALL"
+#       - name: bob
+#         authorized:
+#           - /tmp/bob/id_rsa.pub
+#         mysql:
+#             password: other-mysql-password
+#             hosts:
+#               - "db1"
+#             privs:
+#               - "*.*:SELECT"
+#               - "DB2.*:ALL"
+#   tasks:
+#     # Output:
+#     # "user=alice key='/tmp/alice/onekey.pub'"
+#     # "user=alice key='/tmp/alice/twokey.pub'"
+#     # "user=bob key='/tmp/bob/id_rsa.pub'"
+#     - name: with_subelements
+#       shell: echo "user={{ item.0.name }} key='{{ item.1 }}'"
+#       register: result_2
+#       with_subelements:
+#          - "{{ users }}"
+#          - authorized
 
-    - name: Nested with_subelements
-      shell: echo "name={{ item.0.name }} password={{ item.0.mysql.password }} host={{ item.1 }} priv={{ item.0.mysql.privs | join('/') }}"
-      with_subelements:
-        - "{{ users }}"
-        - mysql.hosts
+#     - debug: msg="{{item.stdout_lines}}"
+#       with_items: "{{result_2.results}}"
+
+#     # Output:
+#     # "name=alice password=mysql-password host=% priv=*.*:SELECT/DB1.*:ALL"
+#     # "name=alice password=mysql-password host=127.0.0.1 priv=*.*:SELECT/DB1.*:ALL"
+#     # "name=alice password=mysql-password host=::1 priv=*.*:SELECT/DB1.*:ALL"
+#     # "name=alice password=mysql-password host=localhost priv=*.*:SELECT/DB1.*:ALL"
+#     # "name=bob password=other-mysql-password host=db1 priv=*.*:SELECT/DB2.*:ALL"
+#     - name: Nested with_subelements
+#       shell: echo "name={{ item.0.name }} password={{ item.0.mysql.password }} host={{ item.1 }} priv={{ item.0.mysql.privs | join('/') }}"
+#       with_subelements:
+#         - "{{ users }}"
+#         - mysql.hosts

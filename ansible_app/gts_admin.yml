@@ -56,10 +56,14 @@
   roles:
     - role: core
       opcon_flag: True
+      tags: ['opcon']
 
 - name: Non-Opcon
   hosts: "{{hostvars.localhost.target_env}}"
   roles:
     - role: core
       opcon_flag: False
+      tags: ['non-opcon']
+
+
 

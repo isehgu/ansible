@@ -15,6 +15,12 @@ def cutLastLoginLine(output_list):
 
     return result_list
 
+def stringSplit(target_str, delimiter=' '):
+    return target_str.strip().split(delimiter)
+
+def listExtract(target_list, target_index):
+    return target_list[target_index]
+
 class FilterModule(object):
     ''' The FilterModule class defines a filters method 
     that returns a dictionary with the name of the 
@@ -24,5 +30,7 @@ class FilterModule(object):
 
     def filters(self):
         return {
-            'cutLastLoginLine': cutLastLoginLine
+            'cutLastLoginLine': cutLastLoginLine,
+            'stringSplit': stringSplit,
+            'listExtract': listExtract
         }
