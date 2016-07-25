@@ -6,7 +6,10 @@
   vars:
     mystring: "This is the greatest"
   tasks:
-    - shell: echo "{{'This is the greatest' | stringSplit | listExtract(1)}}"
+
+    - debug: msg="{{mystring.split().2}}"
+
+    - shell: echo "{{'This is the greatest'.split().3}}"
 
 ########################################################
 # # Testing out filter 'default' with boolean values

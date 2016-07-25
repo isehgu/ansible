@@ -1,2 +1,3 @@
 ---
 # defaults file for core
+process_state: 'mismatch'
