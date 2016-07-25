@@ -7,15 +7,13 @@
   # result count is 0.
   # If result count is not 0, which means some processes are listed
   # then the process can only be Perflogger, or NewsService
-  until: (gtsstatus_result.stdout_lines|gtsOpconResultCount == 0) or
-         ('PerformanceLogger' in item) or
-         ('NewsService' in item)
-  with_items: "{{gtsstatus_result.stdout_lines|gtsOpconCutFluff}}"
+  until: "gtsstatus_result.stdout_lines|gtsOpconResultCount == 0"
   retries: 10
   delay: 10
 
 #- debug: msg="Line count is {{gtsstatus_result.stdout_lines|gtsOpconResultCount}}"
-#- debug: msg="{{gtsstatus_result.stdout_lines|gtsOpconCutFluff}}"
+- debug: msg="{{gtsstatus_result.stdout_lines|gtsOpconCutFluff}}"
+  when: gtsstatus_result|failed
 
 # - fail: msg="One or more processes are not in their expected state"
 #   #when: "'PerformanceLogger' not in item and 'NewsService' not in item and gtsstatus_result.stdout_lines|gtsOpconResultCount > 0"
@@ -24,41 +22,41 @@
 #         (gtsstatus_result.stdout_lines|gtsOpconResultCount > 0)
 
 #   with_items: "{{gtsstatus_result.stdout_lines|gtsOpconCutFluff}}"
-
+############################################################
 
 # If processes should be up, then nothing should be down
-- name: All processes up?
-  gtsopcon: command="gtsstatus -m" env_number="{{env_number}}"
-  register: gtsstatus_result
-  changed_when: False
-  # Keep checking 10 times, with 10 seconds intervals until either
-  # result count is 0.
-  # If result count is not 0, which means some processes are listed
-  # then the process can only be Perflogger, or NewsService
-  until: (gtsstatus_result.stdout_lines|gtsOpconResultCount == 0) or
-         ('PerformanceLogger' in item) or
-         ('NewsService' in item)
-  with_items: "{{gtsstatus_result.stdout_lines|gtsOpconCutFluff}}"
-  retries: 10
-  delay: 10
-  when: process_state == 'up'
+# - name: All processes up?
+#   gtsopcon: command="gtsstatus -m" env_number="{{env_number}}"
+#   register: gtsstatus_result
+#   changed_when: False
+#   # Keep checking 10 times, with 10 seconds intervals until either
+#   # result count is 0.
+#   # If result count is not 0, which means some processes are listed
+#   # then the process can only be Perflogger, or NewsService
+#   until: (gtsstatus_result.stdout_lines|gtsOpconResultCount == 0) or
+#          ('PerformanceLogger' in item) or
+#          ('NewsService' in item)
+#   with_items: "{{gtsstatus_result.stdout_lines|gtsOpconCutFluff}}"
+#   retries: 10
+#   delay: 10
+#   when: process_state == 'up'
 
 
-# If processes should be down, then no process should be returned since there is
-# no SystemMonitor and
-# there's a line containing "No SystemMonitor and/or MonitorStateCalculator running"
-- name: All processes down?
-  gtsopcon: command="gtsstatus -m" env_number="{{env_number}}"
-  register: gtsstatus_result
-  changed_when: False
-  # Keep checking 10 times, with 10 seconds intervals until either
-  # result count is 0 and we have the following text
-  # "No SystemMonitor and/or MonitorStateCalculator running"
-  until: (gtsstatus_result.stdout_lines|gtsOpconResultCount == 0) and
-         ('No SystemMonitor and/or MonitorStateCalculator running' in item)
-  with_items: "{{gtsstatus_result.stdout_lines}}"
-  retries: 10
-  delay: 10
-  when: process_state == 'down'
+# # If processes should be down, then no process should be returned since there is
+# # no SystemMonitor and
+# # there's a line containing "No SystemMonitor and/or MonitorStateCalculator running"
+# - name: All processes down?
+#   gtsopcon: command="gtsstatus -m" env_number="{{env_number}}"
+#   register: gtsstatus_result
+#   changed_when: False
+#   # Keep checking 10 times, with 10 seconds intervals until either
+#   # result count is 0 and we have the following text
+#   # "No SystemMonitor and/or MonitorStateCalculator running"
+#   until: (gtsstatus_result.stdout_lines|gtsOpconResultCount == 0) and
+#          ('No SystemMonitor and/or MonitorStateCalculator running' in item)
+#   with_items: "{{gtsstatus_result.stdout_lines}}"
+#   retries: 10
+#   delay: 10
+#   when: process_state == 'down'
 
 
