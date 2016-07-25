@@ -1,28 +1,30 @@
 ---
 - name: Any mismatched state?
   gtsopcon: command="gtsstatus -m" env_number="{{env_number}}"
-  register: gtsstatus_result
+  register: mismatch_result
   changed_when: False
   # Keep checking 10 times, with 10 seconds intervals until either
   # result count is 0.
   # If result count is not 0, which means some processes are listed
   # then the process can only be Perflogger, or NewsService
-  until: "gtsstatus_result.stdout_lines|gtsOpconResultCount == 0"
+  until: "mismatch_result.stdout_lines|gtsOpconResultCount == 0"
   retries: 10
   delay: 10
   ignore_errors: True
 
 #- debug: msg="Line count is {{gtsstatus_result.stdout_lines|gtsOpconResultCount}}"
-- debug: msg="{{gtsstatus_result.stdout_lines|gtsOpconCutFluff}}"
-  when: gtsstatus_result|failed
+# - debug: msg="{{gtsstatus_result.stdout_lines|gtsOpconCutFluff}}"
+#   when: gtsstatus_result|failed
 
+# At this point, gtsstatus -m has completed
+# We would only check each process listed if the Opcon count is not 0
 - name: One or more processes are not in their expected state
   fail: msg="One or more processes are not in their expected state"
   #when: "'PerformanceLogger' not in item and 'NewsService' not in item and gtsstatus_result.stdout_lines|gtsOpconResultCount > 0"
   when: ('PerformanceLogger' not in item) and 
         ('NewsService' not in item) and 
-        (gtsstatus_result|failed)
-  with_items: "{{gtsstatus_result.stdout_lines|gtsOpconCutFluff}}"
+        (mismatch_result|failed)
+  with_items: "{{mismatch_result.stdout_lines|gtsOpconCutFluff}}"
 ############################################################
 
 # If processes should be up, then nothing should be down
