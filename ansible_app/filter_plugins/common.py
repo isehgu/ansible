@@ -44,6 +44,19 @@ def hasUniqueListItem(list1, list2):
     return unique
 
 
+def isUniqueItem(target, list1):
+    """ Is target the unique item that it contains noothing from list1?
+    Yes/True - target is so unique that it doesnt
+    contain any one of the list2 items
+    No/False -- No, target contains at least one list1 item. Not unique"""
+    for item in list1:
+        if item in target:
+            # target has item2, it's no longer unique
+            return False
+
+    return True
+
+
 class FilterModule(object):
     ''' The FilterModule class defines a filters method
     that returns a dictionary with the name of the
@@ -55,4 +68,5 @@ class FilterModule(object):
         return {
             'cutLastLoginLine': cutLastLoginLine,
             'hasUniqueListItem': hasUniqueListItem,
+            'isUniqueItem': isUniqueItem,
         }
