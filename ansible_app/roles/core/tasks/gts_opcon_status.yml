@@ -24,73 +24,74 @@
 - name: Fail if mismatch found
   fail: msg="One or more processes are not in their expected state"
   #when: "'PerformanceLogger' not in item and 'NewsService' not in item and gtsstatus_result.stdout_lines|gtsOpconResultCount > 0"
-  when: (item.1 not in item.0) and 
-        (mismatch_result|failed)
-  with_nested: 
-    - "{{mismatch_result.stdout_lines|gtsOpconCutFluff}}"
-    - "{{gts_exclude_process}}"
-##############################################################
+  
+  # If gtsstatus -m returns valid results, and
+  # one of those results isn't in the excluded list, then it's a legit mismatch.
+  # Fail on that.
+  when: (mismatch_result|failed) and 
+        (mismatch_result.stdout_lines|gtsOpconCutFluff|HasUniqueListItem(gts_exclude_processes))
+# ##############################################################
 
-############################################################
-# Down -- Process are only verified 'down' if
-# 1. No mismatch is found -- Since mismatch is the first to run,
-# any failure would've stopped the playbook from getting here.
-# 2. The word 'DOWN' is in stdout. This means the processes
-# that are expected to be down, is down. Any runnning process
-# is irrelevant, since they are expected to be running.
-# i.e. jboss, scheduler, SystemMonitor
-# 3. No line containing -- 'No SystemMonitor'
-############################################################
-- name: Making sure process shutdown completes
-  gtsopcon: command="gtsstatus" env_number="{{env_number}}"
-  register: down_result
-  changed_when: False
-  until: "'SHUTDWN' not in down_result.stdout"
-  retries: 10
-  delay: 2
-  ignore_errors: True
-  when: process_state == 'down'
+# ############################################################
+# # Down -- Process are only verified 'down' if
+# # 1. No mismatch is found -- Since mismatch is the first to run,
+# # any failure would've stopped the playbook from getting here.
+# # 2. The word 'DOWN' is in stdout. This means the processes
+# # that are expected to be down, is down. Any runnning process
+# # is irrelevant, since they are expected to be running.
+# # i.e. jboss, scheduler, SystemMonitor
+# # 3. No line containing -- 'No SystemMonitor'
+# ############################################################
+# - name: Making sure process shutdown completes
+#   gtsopcon: command="gtsstatus" env_number="{{env_number}}"
+#   register: down_result
+#   changed_when: False
+#   until: "'SHUTDWN' not in down_result.stdout"
+#   retries: 10
+#   delay: 2
+#   ignore_errors: True
+#   when: process_state == 'down'
 
-# - name: Pausing 5 sec to give processes time to come down
-#   pause: 5
+# # - name: Pausing 5 sec to give processes time to come down
+# #   pause: 5
 
-- name: Fail if processes are not down
-  fail: msg="Processes might NOT be down!"
-  when: (process_state == 'down') and 
-        ('No SystemMonitor' in down_result.stdout) and
-        (item not in gts_always_up_processes) and
-        # Expected state is down
-        (item.split().3 == 'DOWN')
-  with_items:
-    - "{{down_result.stdout_lines|gtsOpconCutFluff}}"
+# - name: Fail if processes are not down
+#   fail: msg="Processes might NOT be down!"
+#   when: (process_state == 'down') and 
+#         ('No SystemMonitor' in down_result.stdout) and
+#         (item not in gts_always_up_processes) and
+#         # Expected state is down
+#         (item.split().3 == 'DOWN')
+#   with_items:
+#     - "{{down_result.stdout_lines|gtsOpconCutFluff}}"
 
-##############################################################
-############################################################
-# Up
-############################################################
-- name: Making sure process startup completes
-  gtsopcon: command="gtsstatus" env_number="{{env_number}}"
-  register: up_result
-  changed_when: False
-  until: ('INITMON' not in up_result.stdout) and
-          ('W_SYNC' not in up_result.stdout)
-  retries: 10
-  delay: 2
-  ignore_errors: True
-  when: process_state == 'up'
+# ##############################################################
+# ############################################################
+# # Up
+# ############################################################
+# - name: Making sure process startup completes
+#   gtsopcon: command="gtsstatus" env_number="{{env_number}}"
+#   register: up_result
+#   changed_when: False
+#   until: ('INITMON' not in up_result.stdout) and
+#           ('W_SYNC' not in up_result.stdout)
+#   retries: 10
+#   delay: 2
+#   ignore_errors: True
+#   when: process_state == 'up'
 
-# - name: Pausing 5 sec to give processes time to come down
-#   pause: 5
+# # - name: Pausing 5 sec to give processes time to come down
+# #   pause: 5
 
-- name: Fail if processes are not running
-  fail: msg="Processes might NOT be running!"
-  when: (process_state == 'up') and 
-        ('No SystemMonitor' in up_result.stdout) and
-        (item.1 not in item.0)
-        (item.0.split().3 == 'RUNNING')
-  with_nested:
-    - "{{up_result.stdout_lines|gtsOpconCutFluff}}"
-    - "{{gts_exclude_process}}"
+# - name: Fail if processes are not running
+#   fail: msg="Processes might NOT be running!"
+#   when: (process_state == 'up') and 
+#         ('No SystemMonitor' in up_result.stdout) and
+#         (item.1 not in item.0)
+#         (item.0.split().3 == 'RUNNING')
+#   with_nested:
+#     - "{{up_result.stdout_lines|gtsOpconCutFluff}}"
+#     - "{{gts_exclude_process}}"
         
 ##############################################################
 

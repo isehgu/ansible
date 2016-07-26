@@ -1,7 +1,7 @@
 ---
 # defaults file for core
 process_state: 'up'
-gts_always_up_process:
+gts_always_up_processes:
   - 'ActiveMQ'
   - 'HostController'
   - 'Jboss'
@@ -12,7 +12,7 @@ gts_always_up_process:
   - 'SystemController'
   - 'SystemMonitor'
 
-gts_exclude_process:
+gts_exclude_processes:
   - 'PerformanceLogger'
   - 'NewsService'
   - 'AuditTrail'
