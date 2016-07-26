@@ -2,7 +2,7 @@
 ############################################################
 # Mismatch
 ############################################################
-- name: Any mismatched state?
+- name: Checking for mismatch
   gtsopcon: command="gtsstatus -m" env_number="{{env_number}}"
   register: mismatch_result
   changed_when: False
@@ -21,7 +21,7 @@
 
 # At this point, gtsstatus -m has completed
 # We would only check each process listed if the Opcon count is not 0
-- name: One or more processes are not in their expected state
+- name: Fail if mismatch found
   fail: msg="One or more processes are not in their expected state"
   #when: "'PerformanceLogger' not in item and 'NewsService' not in item and gtsstatus_result.stdout_lines|gtsOpconResultCount > 0"
   when: ('PerformanceLogger' not in item) and 
@@ -53,7 +53,7 @@
 # - name: Pausing 5 sec to give processes time to come down
 #   pause: 5
 
-- name: Verify process down state
+- name: Fail if processes are not down
   fail: msg="Processes might NOT be down!"
   when: (process_state == 'down') and 
         ('No SystemMonitor' in down_result.stdout) and
@@ -84,7 +84,7 @@
 
 # At this point, gtsstatus -m has completed
 # We would only check each process listed if the Opcon count is not 0
-- name: Verify process up state
+- name: Fail if processes are not running
   fail: msg="Processes might NOT be running!"
   when: (process_state == 'up') and 
         ('No SystemMonitor' in up_result.stdout) and
