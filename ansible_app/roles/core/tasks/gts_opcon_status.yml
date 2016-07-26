@@ -40,7 +40,7 @@
 # i.e. jboss, scheduler, SystemMonitor
 # 3. No line containing -- 'No SystemMonitor'
 ############################################################
-- name: All process down?
+- name: Making sure process shutdown completes
   gtsopcon: command="gtsstatus" env_number="{{env_number}}"
   register: down_result
   changed_when: False
@@ -53,8 +53,8 @@
 # - name: Pausing 5 sec to give processes time to come down
 #   pause: 5
 
-- name: Processes are not in down state
-  fail: msg="One or more processes are not in down state"
+- name: Verify process down state
+  fail: msg="Processes might NOT be down!"
   when: (process_state == 'down') and 
         ('No SystemMonitor' in down_result.stdout) and
         ('DOWN' not in down_result.stdout|gtsOpconCutFluff)
@@ -68,7 +68,7 @@
 # that are expected to be running, is running. Any down process
 # is irrelevant, since they are expected to be down
 ############################################################
-- name: All Process up?
+- name: Making sure process startup completes
   gtsopcon: command="gtsstatus" env_number="{{env_number}}"
   register: up_result
   changed_when: False
@@ -84,8 +84,8 @@
 
 # At this point, gtsstatus -m has completed
 # We would only check each process listed if the Opcon count is not 0
-- name: Processes are not up!
-  fail: msg="One or more processes are not up!"
+- name: Verify process up state
+  fail: msg="Processes might NOT be running!"
   when: (process_state == 'up') and 
         ('No SystemMonitor' in up_result.stdout) and
         ('RUNNING' not in up_result.stdout|gtsOpconCutFluff)
