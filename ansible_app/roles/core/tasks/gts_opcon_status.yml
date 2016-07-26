@@ -77,7 +77,7 @@
   retries: 10
   delay: 2
   ignore_errors: True
-  when: process_state == 'down'
+  when: process_state == 'up'
 
 # - name: Pausing 5 sec to give processes time to come down
 #   pause: 5
