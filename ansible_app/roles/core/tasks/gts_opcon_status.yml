@@ -1,4 +1,7 @@
 ---
+############################################################
+# Mismatch
+############################################################
 - name: Any mismatched state?
   gtsopcon: command="gtsstatus -m" env_number="{{env_number}}"
   register: mismatch_result
@@ -25,41 +28,62 @@
         ('NewsService' not in item) and 
         (mismatch_result|failed)
   with_items: "{{mismatch_result.stdout_lines|gtsOpconCutFluff}}"
+##############################################################
+
 ############################################################
+# Down -- Process are only verified 'down' if
+# 1. No mismatch is found -- Since mismatch is the first to run,
+# any failure would've stopped the playbook from getting here.
+# 2. The word 'DOWN' is in stdout. This means the processes
+# that are expected to be down, is down. Any runnning process
+# is irrelevant, since they are expected to be running.
+# i.e. jboss, scheduler, SystemMonitor
+# 3. No line containing -- 'No SystemMonitor'
+############################################################
+- name: All process down?
+  gtsopcon: command="gtsstatus" env_number="{{env_number}}"
+  register: down_result
+  changed_when: False
+  until: 'SHUTDWN' not in down_result.stdout
+  retries: 10
+  delay: 2
+  ignore_errors: True
 
-# If processes should be up, then nothing should be down
-# - name: All processes up?
-#   gtsopcon: command="gtsstatus -m" env_number="{{env_number}}"
-#   register: gtsstatus_result
-#   changed_when: False
-#   # Keep checking 10 times, with 10 seconds intervals until either
-#   # result count is 0.
-#   # If result count is not 0, which means some processes are listed
-#   # then the process can only be Perflogger, or NewsService
-#   until: (gtsstatus_result.stdout_lines|gtsOpconResultCount == 0) or
-#          ('PerformanceLogger' in item) or
-#          ('NewsService' in item)
-#   with_items: "{{gtsstatus_result.stdout_lines|gtsOpconCutFluff}}"
-#   retries: 10
-#   delay: 10
-#   when: process_state == 'up'
+# - name: Pausing 5 sec to give processes time to come down
+#   pause: 5
 
+- name: Processes are not in down state
+  fail: msg="One or more processes are not in down state"
+  when: ('No SystemMonitor' in down_result.stdout) and
+        ('DOWN' not in down_result.stdout|gtsOpconCutFluff)
+##############################################################
+############################################################
+# Up -- Process are only verified 'up' if
+# 1. No mismatch is found -- Since mismatch is the first to run,
+# any failure would've stopped the playbook from getting here.
+# 2. The word 'RUNNING' is in stdout. This means the processes
+# that are expected to be running, is running. Any down process
+# is irrelevant, since they are expected to be down
+############################################################
+- name: All Process up?
+  gtsopcon: command="gtsstatus" env_number="{{env_number}}"
+  register: up_result
+  changed_when: False
+  until: ('INITMON' not in up_result.stdout) and
+          ('W_SYNC' not in up_result.stdout)
+  retries: 10
+  delay: 2
+  ignore_errors: True
 
-# # If processes should be down, then no process should be returned since there is
-# # no SystemMonitor and
-# # there's a line containing "No SystemMonitor and/or MonitorStateCalculator running"
-# - name: All processes down?
-#   gtsopcon: command="gtsstatus -m" env_number="{{env_number}}"
-#   register: gtsstatus_result
-#   changed_when: False
-#   # Keep checking 10 times, with 10 seconds intervals until either
-#   # result count is 0 and we have the following text
-#   # "No SystemMonitor and/or MonitorStateCalculator running"
-#   until: (gtsstatus_result.stdout_lines|gtsOpconResultCount == 0) and
-#          ('No SystemMonitor and/or MonitorStateCalculator running' in item)
-#   with_items: "{{gtsstatus_result.stdout_lines}}"
-#   retries: 10
-#   delay: 10
-#   when: process_state == 'down'
+# - name: Pausing 5 sec to give processes time to come down
+#   pause: 5
+
+# At this point, gtsstatus -m has completed
+# We would only check each process listed if the Opcon count is not 0
+- name: Processes are not up!
+  fail: msg="One or more processes are not up!"
+  when: ('No SystemMonitor' in up_result.stdout) and
+        ('RUNNING' not in up_result.stdout|gtsOpconCutFluff)
+##############################################################
 
 
