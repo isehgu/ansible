@@ -44,10 +44,11 @@
   gtsopcon: command="gtsstatus" env_number="{{env_number}}"
   register: down_result
   changed_when: False
-  until: 'SHUTDWN' not in down_result.stdout
+  until: "'SHUTDWN' not in down_result.stdout"
   retries: 10
   delay: 2
   ignore_errors: True
+  when: process_state == 'down'
 
 # - name: Pausing 5 sec to give processes time to come down
 #   pause: 5
@@ -74,6 +75,7 @@
   retries: 10
   delay: 2
   ignore_errors: True
+  when: process_state == 'down'
 
 # - name: Pausing 5 sec to give processes time to come down
 #   pause: 5
