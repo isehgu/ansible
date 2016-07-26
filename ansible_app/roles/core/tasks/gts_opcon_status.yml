@@ -55,9 +55,10 @@
 
 - name: Processes are not in down state
   fail: msg="One or more processes are not in down state"
-  when: ('No SystemMonitor' in down_result.stdout) and
-        ('DOWN' not in down_result.stdout|gtsOpconCutFluff) and
-        (process_state == 'down')
+  when: (process_state == 'down') and 
+        ('No SystemMonitor' in down_result.stdout) and
+        ('DOWN' not in down_result.stdout|gtsOpconCutFluff)
+
 ##############################################################
 ############################################################
 # Up -- Process are only verified 'up' if
@@ -85,9 +86,10 @@
 # We would only check each process listed if the Opcon count is not 0
 - name: Processes are not up!
   fail: msg="One or more processes are not up!"
-  when: ('No SystemMonitor' in up_result.stdout) and
-        ('RUNNING' not in up_result.stdout|gtsOpconCutFluff) and
-        (process_state == 'up')
+  when: (process_state == 'up') and 
+        ('No SystemMonitor' in up_result.stdout) and
+        ('RUNNING' not in up_result.stdout|gtsOpconCutFluff)
+        
 ##############################################################
 
 
