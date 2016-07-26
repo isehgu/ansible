@@ -1,3 +1,18 @@
 ---
 # defaults file for core
 process_state: 'up'
+gts_always_up_process:
+  - 'ActiveMQ'
+  - 'HostController'
+  - 'Jboss'
+  - 'LocalMySQL'
+  - 'MonitorStateCal'
+  - 'RDS-'
+  - 'SCHEDULER'
+  - 'SystemController'
+  - 'SystemMonitor'
+
+gts_exclude_process:
+  - 'PerformanceLogger'
+  - 'NewsService'
+  - 'AuditTrail'

@@ -24,10 +24,11 @@
 - name: Fail if mismatch found
   fail: msg="One or more processes are not in their expected state"
   #when: "'PerformanceLogger' not in item and 'NewsService' not in item and gtsstatus_result.stdout_lines|gtsOpconResultCount > 0"
-  when: ('PerformanceLogger' not in item) and 
-        ('NewsService' not in item) and 
+  when: (item.1 not in item.0) and 
         (mismatch_result|failed)
-  with_items: "{{mismatch_result.stdout_lines|gtsOpconCutFluff}}"
+  with_nested: 
+    - "{{mismatch_result.stdout_lines|gtsOpconCutFluff}}"
+    - "{{gts_exclude_process}}"
 ##############################################################
 
 ############################################################
@@ -57,16 +58,15 @@
   fail: msg="Processes might NOT be down!"
   when: (process_state == 'down') and 
         ('No SystemMonitor' in down_result.stdout) and
-        ('DOWN' not in down_result.stdout|gtsOpconCutFluff)
+        (item not in gts_always_up_processes) and
+        # Expected state is down
+        (item.split().3 == 'DOWN')
+  with_items:
+    - "{{down_result.stdout_lines|gtsOpconCutFluff}}"
 
 ##############################################################
 ############################################################
-# Up -- Process are only verified 'up' if
-# 1. No mismatch is found -- Since mismatch is the first to run,
-# any failure would've stopped the playbook from getting here.
-# 2. The word 'RUNNING' is in stdout. This means the processes
-# that are expected to be running, is running. Any down process
-# is irrelevant, since they are expected to be down
+# Up
 ############################################################
 - name: Making sure process startup completes
   gtsopcon: command="gtsstatus" env_number="{{env_number}}"
@@ -82,13 +82,15 @@
 # - name: Pausing 5 sec to give processes time to come down
 #   pause: 5
 
-# At this point, gtsstatus -m has completed
-# We would only check each process listed if the Opcon count is not 0
 - name: Fail if processes are not running
   fail: msg="Processes might NOT be running!"
   when: (process_state == 'up') and 
         ('No SystemMonitor' in up_result.stdout) and
-        ('RUNNING' not in up_result.stdout|gtsOpconCutFluff)
+        (item.1 not in item.0)
+        (item.0.split().3 == 'RUNNING')
+  with_nested:
+    - "{{up_result.stdout_lines|gtsOpconCutFluff}}"
+    - "{{gts_exclude_process}}"
         
 ##############################################################
 
