@@ -15,7 +15,7 @@ def cutLastLoginLine(output_list):
 
     return result_list
 
-def HasUniqueListItem(list1, list2)
+def hasUniqueListItem(list1, list2):
     """ Is there any item in list1 that doesn't
     contain any of list2 items?
     Yes/True - There is at least one item in list1 that doesnt
@@ -57,5 +57,5 @@ class FilterModule(object):
     def filters(self):
         return {
             'cutLastLoginLine': cutLastLoginLine,
-            'HasUniqueListItem': HasUniqueListItem,
+            'hasUniqueListItem': hasUniqueListItem,
         }

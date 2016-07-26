@@ -25,11 +25,11 @@
   fail: msg="One or more processes are not in their expected state"
   #when: "'PerformanceLogger' not in item and 'NewsService' not in item and gtsstatus_result.stdout_lines|gtsOpconResultCount > 0"
   
-  # If gtsstatus -m returns valid results, and
+  # If gtsstatus -m returns actual results, and
   # one of those results isn't in the excluded list, then it's a legit mismatch.
   # Fail on that.
   when: (mismatch_result|failed) and 
-        (mismatch_result.stdout_lines|gtsOpconCutFluff|HasUniqueListItem(gts_exclude_processes))
+        (mismatch_result.stdout_lines|gtsOpconCutFluff|hasUniqueListItem(gts_exclude_processes))
 # ##############################################################
 
 # ############################################################
