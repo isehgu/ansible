@@ -1,0 +1,16 @@
+---
+- name: Any mismatched state?
+  gtsopcon: command="gtsstatus -m" env_number="{{env_number}}"
+  register: gtsstatus_result
+  changed_when: False
+  # Keep checking 10 times, with 10 seconds intervals until either
+  # result count is 0.
+  # If result count is not 0, which means some processes are listed
+  # then the process can only be Perflogger, or NewsService
+  #failed_when: 'PerformanceLogger' in item
+
+
+- debug: msg="{{item}}"
+  with_items: "{{gtsstatus_result.stdout_lines|gtsOpconCutFluff}}"
+
+

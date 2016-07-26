@@ -9,7 +9,7 @@
   # then the process can only be Perflogger, or NewsService
   until: "mismatch_result.stdout_lines|gtsOpconResultCount == 0"
   retries: 10
-  delay: 10
+  delay: 1
   ignore_errors: True
 
 #- debug: msg="Line count is {{gtsstatus_result.stdout_lines|gtsOpconResultCount}}"

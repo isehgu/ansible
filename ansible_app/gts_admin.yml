@@ -59,7 +59,7 @@
       # User have the option to check if the env is up or down
       # Default is checking for 'up' status (defined in the role's default)
       # mismatch is always checked, the role wouldn't care what the state value is
-      process_state: {{state|default('up')}}
+      process_state: "{{state|default('up')}}"
       tags: ['opcon']
 
 - name: Non-Opcon
