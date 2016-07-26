@@ -56,7 +56,8 @@
 - name: Processes are not in down state
   fail: msg="One or more processes are not in down state"
   when: ('No SystemMonitor' in down_result.stdout) and
-        ('DOWN' not in down_result.stdout|gtsOpconCutFluff)
+        ('DOWN' not in down_result.stdout|gtsOpconCutFluff) and
+        (process_state == 'down')
 ##############################################################
 ############################################################
 # Up -- Process are only verified 'up' if
@@ -85,7 +86,8 @@
 - name: Processes are not up!
   fail: msg="One or more processes are not up!"
   when: ('No SystemMonitor' in up_result.stdout) and
-        ('RUNNING' not in up_result.stdout|gtsOpconCutFluff)
+        ('RUNNING' not in up_result.stdout|gtsOpconCutFluff) and
+        (process_state == 'up')
 ##############################################################
 
 
