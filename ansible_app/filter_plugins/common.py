@@ -23,6 +23,7 @@ def hasUniqueListItem(list1, list2):
     contain any one of the list2 items
     No/False -- All items of list1 contains at least one item from
     list2"""
+    unique = None
     for item1 in list1:
         # We assume item1 is unique unless discovered in the inner loop
         unique = True

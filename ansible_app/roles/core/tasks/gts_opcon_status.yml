@@ -11,13 +11,14 @@
   # If result count is not 0, which means some processes are listed
   # then the process can only be Perflogger, or NewsService
   until: "mismatch_result.stdout_lines|gtsOpconResultCount == 0"
-  retries: 10
+  retries: 2
   delay: 1
   ignore_errors: True
 
 #- debug: msg="Line count is {{gtsstatus_result.stdout_lines|gtsOpconResultCount}}"
-# - debug: msg="{{gtsstatus_result.stdout_lines|gtsOpconCutFluff}}"
-#   when: gtsstatus_result|failed
+- debug: var=mismatch_result
+  when: mismatch_result|failed
+#- debug: msg="{{mismatch_result.stdout_lines|gtsOpconCutFluff|count}}"
 
 # At this point, gtsstatus -m has completed
 # We would only check each process listed if the Opcon count is not 0
@@ -25,11 +26,14 @@
   fail: msg="One or more processes are not in their expected state"
   #when: "'PerformanceLogger' not in item and 'NewsService' not in item and gtsstatus_result.stdout_lines|gtsOpconResultCount > 0"
   
-  # If gtsstatus -m returns actual results, and
-  # one of those results isn't in the excluded list, then it's a legit mismatch.
-  # Fail on that.
-  when: (mismatch_result|failed) and 
-        (mismatch_result.stdout_lines|gtsOpconCutFluff|hasUniqueListItem(gts_exclude_processes))
+  # If gtsstatus -m return result show No SystemMonitor, then we fail right away
+  # If SystemMonitor is up, then we check if the task failed.
+  # If the task succeeded, then there's no mismatch, and we skip this fail task
+  # If the task did fail, then we have to check if listed results are from the excluded processes list
+  # if the result has item that is NOT part of the excluded processes list, then it's legit, and we fail
+  when: ('No SystemMonitor' in mismatch_result.stderr) or
+        ((mismatch_result|failed) and
+        (mismatch_result.stdout_lines|gtsOpconCutFluff|hasUniqueListItem(gts_exclude_processes)))
 # ##############################################################
 
 # ############################################################
@@ -85,13 +89,12 @@
 
 - name: Fail if processes are not running
   fail: msg="Processes might NOT be running!"
-  when: (process_state == 'up') and 
-        ('No SystemMonitor' in up_result.stdout) and
-        (item|isUniqueItem(gts_exclude_processes))
-        (item.split().3 != 'RUNNING')
+  when: (process_state == 'up') and
+        (('No SystemMonitor' in up_result.stderr) or
+         ((item|isUniqueItem(gts_exclude_processes)) and
+          (item.split().2 != 'RUNNING')))
   with_items:
     - "{{up_result.stdout_lines|gtsOpconCutFluff}}"
         
 #############################################################
-
 
