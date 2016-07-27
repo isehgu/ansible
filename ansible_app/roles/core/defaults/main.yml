@@ -15,4 +15,7 @@ gts_always_up_processes:
 gts_exclude_processes:
   - 'PerformanceLogger'
   - 'NewsService'
-  - 'AuditTrail'
+  - 'AuditTrail-12'
+  - 'AuditTrail-212'
+
+retries: 12

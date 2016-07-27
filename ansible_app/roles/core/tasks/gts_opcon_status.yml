@@ -11,8 +11,8 @@
   # If result count is not 0, which means some processes are listed
   # then the process can only be Perflogger, or NewsService
   until: "mismatch_result.stdout_lines|gtsOpconResultCount == 0"
-  retries: 2
-  delay: 1
+  retries: "{{retries}}"
+  delay: 2
   ignore_errors: True
 
 #- debug: msg="Line count is {{gtsstatus_result.stdout_lines|gtsOpconResultCount}}"
@@ -33,7 +33,8 @@
   # if the result has item that is NOT part of the excluded processes list, then it's legit, and we fail
   when: ('No SystemMonitor' in mismatch_result.stderr) or
         ((mismatch_result|failed) and
-        (mismatch_result.stdout_lines|gtsOpconCutFluff|hasUniqueListItem(gts_exclude_processes)))
+         (mismatch_result.stdout_lines|gtsOpconCutFluff|hasUniqueListItem(gts_exclude_processes)))
+
 ##############################################################
 
 ############################################################
@@ -44,7 +45,7 @@
   register: down_result
   changed_when: False
   until: "'SHUTDWN' not in down_result.stdout"
-  retries: 10
+  retries: "{{retries}}"
   delay: 2
   ignore_errors: True
   when: process_state == 'down'
@@ -56,7 +57,7 @@
 # Request to check for down state.
 # Either SystemMonitor or MonitorStateCalculator is down.
 # If SystemMonitor and MonitorStateCalculator are up, 
-# then check to see if item is part of the always-up process list.
+# then check to see if item is part of both the always-up process list and exclude process list.
 # If it's not, then it should be down. So we check it's expected state.
 # If expected state is down, then it's down. PLease keep in mind,
 # at this point, expected state == current state, otherwise mismatch-check
@@ -64,11 +65,11 @@
 - name: Fail if processes are not down or SystemMonitor/MonitorStateCalculator might be down
   fail: msg="Processes might NOT be down or SystemMonitor/MonitorStateCalculator might be down!"
   when: (process_state == 'down') and 
-        ('No SystemMonitor' in down_result.stdout) or
-        ((item|isUniqueItem(gts_always_up_processes)) and
+        (('No SystemMonitor' in down_result.stdout) or
+         ((item|isUniqueItem(gts_always_up_processes)) and (item|isUniqueItem(gts_exclude_processes))) and
          (item.split().2 != 'DOWN'))
   with_items:
-    - "{{down_result.stdout_lines|gtsOpconCutFluff}}"
+    - "{{down_result.stdout_lines|default([])|gtsOpconCutFluff}}"
 
 ##############################################################
 ############################################################
@@ -80,7 +81,7 @@
   changed_when: False
   until: ('INITMON' not in up_result.stdout) and
           ('W_SYNC' not in up_result.stdout)
-  retries: 10
+  retries: "{{retries}}"
   delay: 2
   ignore_errors: True
   when: process_state == 'up'
@@ -88,14 +89,14 @@
 # - name: Pausing 5 sec to give processes time to come down
 #   pause: 5
 
-- name: Fail if processes are not running or SystemMonitor/MonitorStateCalculator might be down
-  fail: msg="Processes might NOT be running or SystemMonitor/MonitorStateCalculator might be down!"
+- name: Fail if processes are not up or SystemMonitor/MonitorStateCalculator might be down
+  fail: msg="Processes might NOT be up or SystemMonitor/MonitorStateCalculator might be down!"
   when: (process_state == 'up') and
-        ('No SystemMonitor' in up_result.stdout) or
-        ((item|isUniqueItem(gts_exclude_processes)) and
-         (item.split().2 != 'RUNNING'))
+        (('No SystemMonitor' in up_result.stdout) or
+         ((item|isUniqueItem(gts_exclude_processes)) and
+          (item.split().2 != 'RUNNING')))
   with_items:
-    - "{{up_result.stdout_lines|gtsOpconCutFluff}}"
+    - "{{up_result.stdout_lines|default([])|gtsOpconCutFluff}}"
         
 #############################################################
 
