@@ -1,6 +1,6 @@
 ---
 - name: Stop ApplicationTypes
-  gtsopcon: command='stop ApplicationTypes' env_number=env_number
+  gtsopcon: command='stop ApplicationTypes' env_number={{env_number}}
   changed_when: False
 
 - name: Checking that all processes should be down
@@ -20,7 +20,7 @@
   pause: seconds=10
 
 - name: Start ApplicationTypes
-  gtsopcon: command='start ApplicationTypes' env_number=env_number
+  gtsopcon: command='start ApplicationTypes' env_number={{env_number}}
   changed_when: False
 
 - name: Checking that all processes should be up

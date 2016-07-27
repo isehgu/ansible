@@ -18,6 +18,6 @@ gts_exclude_processes:
   - 'AuditTrail-12'
   - 'AuditTrail-212'
 
-retries: 15
+retries: 60
 opcon_start_retries: 60
 opcon_stop_retries: 60
