@@ -46,7 +46,7 @@ def hasUniqueListItem(list1, list2):
 
 
 def isUniqueItem(target, list1):
-    """ Is target the unique item that it contains noothing from list1?
+    """ Is target the unique item that it contains nothing from list1?
     Yes/True - target is so unique that it doesnt
     contain any one of the list2 items
     No/False -- No, target contains at least one list1 item. Not unique"""
