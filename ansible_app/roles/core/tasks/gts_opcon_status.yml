@@ -45,7 +45,7 @@
   register: down_result
   changed_when: False
   until: "'SHUTDWN' not in down_result.stdout"
-  retries: "{{retries}}"
+  retries: "{{opcon_stop_retries}}"
   delay: 2
   ignore_errors: True
   when: process_state == 'down'
@@ -81,7 +81,7 @@
   changed_when: False
   until: ('INITMON' not in up_result.stdout) and
           ('W_SYNC' not in up_result.stdout)
-  retries: "{{retries}}"
+  retries: "{{opcon_start_retries}}"
   delay: 2
   ignore_errors: True
   when: process_state == 'up'
