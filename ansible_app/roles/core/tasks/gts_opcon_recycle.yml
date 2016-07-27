@@ -17,7 +17,7 @@
 #   delay: 10
 
 - name: Pause for a bit before restarting. 
-  pause: seconds=10
+  pause: seconds=25
 
 - name: Start ApplicationTypes
   gtsopcon: command='start ApplicationTypes' env_number={{env_number}}
