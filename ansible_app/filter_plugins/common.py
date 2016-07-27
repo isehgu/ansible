@@ -22,7 +22,8 @@ def hasUniqueListItem(list1, list2):
     Yes/True - There is at least one item in list1 that doesnt
     contain any one of the list2 items
     No/False -- All items of list1 contains at least one item from
-    list2"""
+    list2
+    Return None if list1 is empty"""
     unique = None
     for item1 in list1:
         # We assume item1 is unique unless discovered in the inner loop
@@ -49,7 +50,11 @@ def isUniqueItem(target, list1):
     """ Is target the unique item that it contains nothing from list1?
     Yes/True - target is so unique that it doesnt
     contain any one of the list2 items
-    No/False -- No, target contains at least one list1 item. Not unique"""
+    No/False -- No, target contains at least one list1 item. Not unique
+    Return NOne if target is empty string"""
+    if not target:
+        return None
+
     for item in list1:
         if item in target:
             # target has item2, it's no longer unique
