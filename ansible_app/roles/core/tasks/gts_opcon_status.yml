@@ -10,7 +10,10 @@
   # result count is 0.
   # If result count is not 0, which means some processes are listed
   # then the process can only be Perflogger, or NewsService
-  until: "mismatch_result.stdout_lines|gtsOpconResultCount == 0"
+  until:  ('SHUTDWN' not in down_result.stdout) and
+          ('W_SYNC' not in up_result.stdout) and
+          ('INITMON' not in up_result.stdout)
+
   retries: "{{retries}}"
   delay: 2
   ignore_errors: True
