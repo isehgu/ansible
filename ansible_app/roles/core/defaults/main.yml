@@ -12,7 +12,7 @@ gts_always_up_processes:
   - 'SystemController'
   - 'SystemMonitor'
 
-gts_exclude_processes:
+pat_gts_exclude_processes:
   - 'PerformanceLogger'
   - 'NewsService'
   - 'AuditTrail-12'

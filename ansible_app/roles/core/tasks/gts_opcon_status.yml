@@ -69,7 +69,7 @@
   fail: msg="Processes might NOT be down or SystemMonitor/MonitorStateCalculator might be down!"
   when: (process_state == 'down') and 
         (('No SystemMonitor' in down_result.stdout) or
-         ((not item|containListItem(gts_always_up_processes)) and (not item|containListItem(gts_exclude_processes))) and
+         ((not item|containListItem(gts_always_up_processes)) and (not item|containListItem('{{env}}'_gts_exclude_processes))) and
          (item.split().2 != 'DOWN'))
   with_items:
     - "{{down_result.stdout_lines|default([])|gtsOpconCutFluff}}"
@@ -96,7 +96,7 @@
   fail: msg="Processes might NOT be up or SystemMonitor/MonitorStateCalculator might be down!"
   when: (process_state == 'up') and
         (('No SystemMonitor' in up_result.stdout) or
-         ((not item|containListItem(gts_exclude_processes)) and
+         ((not item|containListItem('{{env}}'gts_exclude_processes)) and
           (item.split().2 != 'RUNNING')))
   with_items:
     - "{{up_result.stdout_lines|default([])|gtsOpconCutFluff}}"
