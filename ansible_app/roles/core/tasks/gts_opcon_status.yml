@@ -93,7 +93,7 @@
   fail: msg="Processes might NOT be up or SystemMonitor/MonitorStateCalculator might be down!"
   when: (process_state == 'up') and
         (('No SystemMonitor' in up_result.stdout) or
-         ((item|containListItem(gts_exclude_processes)) and
+         ((not item|containListItem(gts_exclude_processes)) and
           (item.split().2 != 'RUNNING')))
   with_items:
     - "{{up_result.stdout_lines|default([])|gtsOpconCutFluff}}"

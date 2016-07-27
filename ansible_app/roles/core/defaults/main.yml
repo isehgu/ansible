@@ -18,4 +18,4 @@ gts_exclude_processes:
   - 'AuditTrail-12'
   - 'AuditTrail-212'
 
-retries: 12
+retries: 15
