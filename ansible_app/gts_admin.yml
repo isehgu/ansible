@@ -60,6 +60,7 @@
       # Default is checking for 'up' status (defined in the role's default)
       # mismatch is always checked, the role wouldn't care what the state value is
       process_state: "{{state|default('up')}}"
+      gts_exclude_processes: "{{env}}_gts_exclude_processes"
       tags: ['opcon']
 
 - name: Non-Opcon
