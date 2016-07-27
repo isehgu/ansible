@@ -62,6 +62,20 @@ def isUniqueItem(target, list1):
 
     return True
 
+def containListItem(target, list1):
+    """ does target contain any list1 item?
+    Yes/True - target does contain at least one of the list1 item
+    No/False -- No, target doesn't contain any list1 items
+    Return NOne if target is empty string"""
+    if not target:
+        return None
+
+    for item in list1:
+        if item in target:
+            # target has item2, it's no longer unique
+            return True
+
+    return False
 
 class FilterModule(object):
     ''' The FilterModule class defines a filters method
@@ -75,4 +89,5 @@ class FilterModule(object):
             'cutLastLoginLine': cutLastLoginLine,
             'hasUniqueListItem': hasUniqueListItem,
             'isUniqueItem': isUniqueItem,
+            'containListItem': containListItem,
         }
