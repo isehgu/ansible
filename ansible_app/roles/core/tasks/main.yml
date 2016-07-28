@@ -7,14 +7,17 @@
 
 # - debug: var=retries
 
+# For now, this variables are only used for opcon
 - name: Is gts_exclude_processes defined?
   fail: msg='gts_exclude_processes is not defined'
-  when: gts_exclude_processes is not defined
+  when: (gts_exclude_processes is not defined) and
+        (opcon_flag)
 
 - name: Is gts_always_up_processes defined?
   fail: msg='gts_always_up_processes is not defined'
-  when: gts_always_up_processes is not defined
-
+  when: (gts_always_up_processes is not defined) and
+        (opcon_flag)
+#######################################################
 - include: gts_opcon_status.yml
   when: (opcon_flag == True) and (todo == 'status')
 
