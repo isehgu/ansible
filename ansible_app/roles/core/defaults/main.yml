@@ -12,11 +12,6 @@ gts_always_up_processes:
   - 'SystemController'
   - 'SystemMonitor'
 
-pat_gts_exclude_processes:
-  - 'PerformanceLogger'
-  - 'NewsService'
-  - 'AuditTrail-12'
-  - 'AuditTrail-212'
 
 retries: 60
 opcon_start_retries: 60

@@ -43,16 +43,19 @@
         target_opcon_host: "oat_opcon_host"
       when: "'oat' == env"
 
-    - name: Is it all test core nodes?
+    - name: Is it fake test?
       set_fact:
-        target_env: "core_nodes_in_test"
-        target_opcon_host: "test_opcon_host"
-      when: "'all' == env"
+        target_env: "localhost"
+        target_opcon_host: "localhost"
+        env_file: 'localhost.yml'
+      when: "'test' == env"
 
 # The role will determin which to do -- status, recovery, recycle, etc. 
 # So here, we just need to make sure the right host groups are assigned
 - name: Opcon
   hosts: "{{hostvars.localhost.target_opcon_host}}"
+  vars_files:
+    - "env_configuration/{{env}}.yml"
   roles:
     - role: core
       opcon_flag: True
@@ -60,7 +63,6 @@
       # Default is checking for 'up' status (defined in the role's default)
       # mismatch is always checked, the role wouldn't care what the state value is
       process_state: "{{state|default('up')}}"
-      gts_exclude_processes: "{{env}}_gts_exclude_processes"
       tags: ['opcon']
 
 - name: Non-Opcon

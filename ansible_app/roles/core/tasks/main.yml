@@ -4,6 +4,9 @@
 # env_number
 # todo
 # opcon_flag
+
+- debug: var=gts_exclude_processes
+
 - include: gts_opcon_status.yml
   when: (opcon_flag == True) and (todo == 'status')
 
@@ -19,7 +22,7 @@
 - include: gts_opcon_recycle.yml
   when: (opcon_flag == True) and (todo == 'recycle')
 
-# Deep recycle using gtsCtrl, and then opcon.
-# So this file should include opcon recycle
-# - include: gts_app_recycle.yml
-#   when: (opcon_flag == False) and (todo == 'status')
+Deep recycle using gtsCtrl, and then opcon.
+So this file should include opcon recycle
+- include: gts_app_recycle.yml
+  when: (opcon_flag == False) and (todo == 'status')

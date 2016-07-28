@@ -1,0 +1,4 @@
+---
+gts_exclude_processes:
+  - 'Iron man'
+  - 'Superman'
