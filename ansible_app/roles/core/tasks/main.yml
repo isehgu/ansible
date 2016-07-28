@@ -5,7 +5,15 @@
 # todo
 # opcon_flag
 
-- debug: var=gts_exclude_processes
+# - debug: var=retries
+
+- name: Is gts_exclude_processes defined?
+  fail: msg='gts_exclude_processes is not defined'
+  when: gts_exclude_processes is not defined
+
+- name: Is gts_always_up_processes defined?
+  fail: msg='gts_always_up_processes is not defined'
+  when: gts_always_up_processes is not defined
 
 - include: gts_opcon_status.yml
   when: (opcon_flag == True) and (todo == 'status')
@@ -22,7 +30,7 @@
 - include: gts_opcon_recycle.yml
   when: (opcon_flag == True) and (todo == 'recycle')
 
-Deep recycle using gtsCtrl, and then opcon.
-So this file should include opcon recycle
-- include: gts_app_recycle.yml
-  when: (opcon_flag == False) and (todo == 'status')
+# # Deep recycle using gtsCtrl, and then opcon.
+# # So this file should include opcon recycle
+# - include: gts_app_recycle.yml
+#   when: (opcon_flag == False) and (todo == 'status')
