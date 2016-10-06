@@ -1,0 +1,76 @@
+---
+# Top level playbook for gts Core
+# This is more complicated than MAP, since production and test are two sets of servers
+# For MAP, prod and test are both td-tac01
+# Option 1 --
+#   Include all nodes, and use conditional to run tasks only on hosts of the requested env.
+#   Downside is that ansible will have to loop through all nodes. Kind of wasteful
+# Option 2--
+#   Define a local host, and set env in local host. Then for the actual gts task, set hosts to that env variable
+#
+# Option 2 wins. It works, and it's more efficient. Yay!
+
+- hosts: localhost
+  gather_facts: False
+  tasks:
+    - name: Check for env
+      fail: msg="Variable todo is NOT provided"
+      when: "not env"
+
+    - name: Check for env_number
+      fail: msg="Variable env_number is NOT provided"
+      when: "not env_number"
+
+    - name: Check for todo
+      fail: msg="Variable todo is NOT provided"
+      when: "not todo"
+
+    - name: Is it pat test core nodes?
+      set_fact:
+        target_env: "pat_linux"
+        target_opcon_host: "pat_opcon_host"
+      when: "'pat' == env"
+    
+    - name: Is it bdt test core nodes?
+      set_fact:
+        target_env: "bdt"
+        target_opcon_host: "bdt_opcon_host"
+      when: "'bdt' == env"
+
+    - name: Is it oat test core nodes?
+      set_fact:
+        target_env: "oat_linux"
+        target_opcon_host: "oat_opcon_host"
+      when: "'oat' == env"
+
+    - name: Is it fake test?
+      set_fact:
+        target_env: "localhost"
+        target_opcon_host: "localhost"
+        env_file: 'localhost.yml'
+      when: "'test' == env"
+
+# The role will determin which to do -- status, recovery, recycle, etc. 
+# So here, we just need to make sure the right host groups are assigned
+- name: Opcon
+  hosts: "{{hostvars.localhost.target_opcon_host}}"
+  vars_files:
+    - "env_configuration/{{env}}.yml"
+  roles:
+    - role: core
+      opcon_flag: True
+      # User have the option to check if the env is up or down
+      # Default is checking for 'up' status (defined in the role's default)
+      # mismatch is always checked, the role wouldn't care what the state value is
+      process_state: "{{state|default('up')}}"
+      tags: ['opcon']
+
+- name: Non-Opcon
+  hosts: "{{hostvars.localhost.target_env}}"
+  roles:
+    - role: core
+      opcon_flag: False
+      tags: ['non-opcon']
+
+
+

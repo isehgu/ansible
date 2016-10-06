@@ -1,0 +1,29 @@
+---
+- name: Stop ApplicationTypes
+  gtsopcon: command='stop ApplicationTypes' env_number={{env_number}}
+  changed_when: False
+
+- name: Checking that all processes should be down
+  include: gts_opcon_status.yml
+  vars:
+    process_state: 'down'
+# - name: Make sure all components are down
+#   gtsopcon: command='gtsstatus -m' env_number=env_number
+#   register: stop_status
+#   # If stop ApplicationTypes is successful, 
+#   # Opcon result should display no process
+#   until: {{stop_status.stdout_lines|gtsOpconResultCount == 0}}
+#   retries: 30
+#   delay: 10
+
+- name: Pause for a bit before restarting. 
+  pause: seconds=25
+
+- name: Start ApplicationTypes
+  gtsopcon: command='start ApplicationTypes' env_number={{env_number}}
+  changed_when: False
+
+- name: Checking that all processes should be up
+  include: gts_opcon_status.yml
+  vars:
+    process_state: 'up'

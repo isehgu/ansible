@@ -1,2 +1,7 @@
 ---
 # defaults file for core
+process_state: 'up'
+
+retries: 20
+opcon_start_retries: 60
+opcon_stop_retries: 60

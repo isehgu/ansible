@@ -1,0 +1,22 @@
+---
+gts_exclude_processes:
+  - 'PerformanceLogger'
+  - 'NewsService'
+  - 'AuditTrail-12'
+  - 'AuditTrail-212'
+
+
+gts_always_up_processes:
+  - 'ActiveMQ'
+  - 'HostController'
+  - 'Jboss'
+  - 'LocalMySQL'
+  - 'MonitorStateCal'
+  - 'RDS-'
+  - 'SCHEDULER'
+  - 'SystemController'
+  - 'SystemMonitor'
+
+retries: 60
+opcon_start_retries: 60
+opcon_stop_retries: 60
